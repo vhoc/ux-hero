@@ -1,0 +1,22 @@
+.spinCoin {
+  width: 12.82px;
+  height: 25.13px;
+  animation: spin 1s steps(3) infinite;
+}
+
+@keyframes spin {
+  0% {
+    width: 20.82px;
+    height: 25.13px;
+  }
+
+  50% {
+    width: 4px;
+    height: 25.13px;
+  }
+
+  99% {
+    width: 25px;
+    height: 25.13px;
+  }
+}
