@@ -15,7 +15,7 @@ const HUD = ({ player_name = "Unknown", coins = 0, period = 1, className }: HUDP
     <div
       className={clsx(`
       w-full 
-      flex gap-4 flex-col lg:flex-row pt-10
+      flex gap-x-[70px] gap-y-4 flex-col lg:flex-row pt-10
       `, className
     )}
     >
