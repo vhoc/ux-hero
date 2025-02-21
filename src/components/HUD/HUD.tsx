@@ -1,15 +1,16 @@
 import PlayerStatus from "./PlayerStatus"
-import Period from "./Period"
 import clsx from "clsx"
+import { type IPeriod } from "types"
+import Period from "./Period"
 
 interface HUDProps {
   player_name?: string
   coins: number
-  period: 1 | 2 | 3 | 4
+  period: IPeriod
   className?: string
 }
 
-const HUD = ({ player_name = "Unknown", coins = 0, period = 1, className }: HUDProps) => {
+const HUD = ({ player_name = "Unknown", coins = 0, period, className }: HUDProps) => {
 
   return (
     <div

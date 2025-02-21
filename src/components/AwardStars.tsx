@@ -1,15 +1,25 @@
 import imgBlankStar from "../../public/img/stars/blank-star.png"
-import imgTealStar from "../../public/img/stars/teal-star.png"
-import imgPurpleStar from "../../public/img/stars/purple-star.png"
-import imgYellowStar from "../../public/img/stars/yellow-star.svg"
 import Image from "next/image"
-import { type StaticImport } from "next/dist/shared/lib/get-img-props"
+import { type IAward } from "types"
+// import { awardsArrayToMap } from "@/app/actions"
 
 interface AwardStarsProps {
-  stars: number
+  awards: IAward[]
+  daysSinceLastCriticalError: number
 }
 
-const AwardStars = ({ stars = 0 }:AwardStarsProps) => {
+const awardsArrayToMap = (awards: IAward[]): Map<number, IAward> =>  {
+  return awards.reduce((map, award) => {
+    map.set(award.id, award);
+    return map;
+  }, new Map(awards.sort((a, b) => a.days_required - b.days_required).map(award => [award.id, award])));
+}
+
+const AwardStars = ({ daysSinceLastCriticalError = 0, awards }:AwardStarsProps) => {
+
+  // Convert awards array to Map to ensure the proper order by the days_required property (ascending)
+  const awardsMap = awardsArrayToMap(awards)
+
   return (
     <div
       className="
@@ -20,24 +30,24 @@ const AwardStars = ({ stars = 0 }:AwardStarsProps) => {
     >
 
       <Image
-        src={ stars >= 1 ? imgTealStar : imgBlankStar }
+        src={ daysSinceLastCriticalError >= awardsMap.get(1)!.days_required ? awardsMap.get(1)!.icon_small! : imgBlankStar }
         width={45}
         height={42}
-        alt="First award"
+        alt={awardsMap.get(1)!.name}
       />
 
       <Image
-        src={ stars >= 2 ? imgPurpleStar : imgBlankStar }
+        src={ daysSinceLastCriticalError >= awardsMap.get(2)!.days_required ? awardsMap.get(2)!.icon_small! : imgBlankStar }
         width={45}
         height={42}
-        alt="Second award"
+        alt={awardsMap.get(2)!.name}
       />
 
       <Image
-        src={stars >= 3 ? imgYellowStar as StaticImport : imgBlankStar as StaticImport}
+        src={ daysSinceLastCriticalError >= awardsMap.get(3)!.days_required ? awardsMap.get(3)!.icon_small! : imgBlankStar }
         width={45}
         height={42}
-        alt="Third award"
+        alt={awardsMap.get(3)!.name}
       />
     </div>
   )

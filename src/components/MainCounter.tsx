@@ -1,3 +1,5 @@
+
+
 interface MainCounterProps {
   days: number
 }
@@ -8,7 +10,7 @@ const MainCounter = ({ days = 0 }:MainCounterProps) => {
     <div className="flex flex-col gap-[13px] justify-center w-full xl:h-full">
 
       <span
-        className="text-white text-center text-[150px] leading-none xl:pt-[15%]"
+        className="text-white text-center text-[150px] leading-none "
         style={{
           textShadow: "10px 10px 0px #0d0d38",
         }}

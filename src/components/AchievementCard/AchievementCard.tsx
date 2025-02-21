@@ -1,33 +1,16 @@
-import { type Award } from "types";
-import imgOutstanding from "../../../public/img/stars/outstanding.svg"
-import imgRemarkable from "../../../public/img/stars/remarkable.svg"
-import imgSpectacular from "../../../public/img/stars/spectacular.svg"
+import { type IAward } from "types";
 import Image from "next/image"
-import { type StaticImport } from "next/dist/shared/lib/get-img-props"
 import clsx from "clsx";
 import styles from "./AchievementCard.module.css";
 
 interface AchievementCardProps {
-  daysElapsed: number;
-  award: Award;
-  type: "outstanding" | "remarkable" | "spectacular"
+  daysSinceLastCriticalError: number;
+  award: IAward;
+  name: string
   state: "locked" | "upcoming" | "unlocked"
 }
 
-const AchievementCard = ({ daysElapsed, award, type = "outstanding", state = "unlocked" }: AchievementCardProps) => {
-
-  const starsTable: Record<string, StaticImport> = {
-    "outstanding": imgOutstanding as StaticImport,
-    "remarkable": imgRemarkable as StaticImport,
-    "spectacular": imgSpectacular as StaticImport,
-  }
-
-  const daysToUnlock = {
-    "outstanding": 18,
-    "remarkable": 48,
-    "spectacular": 72,
-  }
-
+const AchievementCard = ({ daysSinceLastCriticalError = 0, award, name, state = "unlocked" }: AchievementCardProps) => {
 
   return (
     <div
@@ -44,7 +27,7 @@ const AchievementCard = ({ daysElapsed, award, type = "outstanding", state = "un
     >
       <div className="w-[74px] min-w-[74px] h-[70px] relative">
         <Image
-          src={ starsTable[type]! }
+          src={ award.icon! }
           alt="Reward star"
           fill
           style={{
@@ -55,8 +38,8 @@ const AchievementCard = ({ daysElapsed, award, type = "outstanding", state = "un
       </div>
 
       <div className="flex flex-col">
-        <span className="capitalize text-lg text-black">{ type }!</span>
-        <p className="text-black text-base">{ `${daysToUnlock[type] - daysElapsed} days to unlock. Get ${award.name}!` }</p>
+        <span className="capitalize text-lg text-black">{ name }!</span>
+        <p className="text-black text-base">{ `${award.days_required - daysSinceLastCriticalError} days to unlock. Get ${award.description}!` }</p>
       </div>
 
     </div>
