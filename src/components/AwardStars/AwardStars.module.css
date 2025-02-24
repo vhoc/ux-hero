@@ -1,0 +1,9 @@
+.fadeIn {
+  animation: 1s fadeIn 1s ease-out forwards;
+  opacity: 0; /* Ensure element is initially invisible */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

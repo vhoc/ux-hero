@@ -1,4 +1,4 @@
-import CoinCounter from "./CoinCounter"
+import CoinCounter from "./CoinCounter/CoinCounter"
 import clsx from "clsx"
 
 interface PlayerStatusProps {

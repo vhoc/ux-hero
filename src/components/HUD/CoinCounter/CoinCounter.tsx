@@ -1,5 +1,5 @@
-import imgCoin25 from "../../../public/img/coin-25.png"
-import imgTimes from "../../../public/img/times.png"
+import imgCoin25 from "../../../../public/img/coin-25.png"
+import imgTimes from "../../../../public/img/times.png"
 import Image from "next/image"
 import { pixelifySans } from "@/fonts"
 import styles from './CoinCounter.module.css';

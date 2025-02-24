@@ -1,0 +1,9 @@
+.slideIn {
+  animation: slideIn 0.7s ease-out forwards;
+  opacity: 0; /* Ensure element is initially invisible */
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-25%); }
+  to { opacity: 1; transform: translateY(0); }
+}

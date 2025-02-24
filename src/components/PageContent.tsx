@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import HUD from "./HUD/HUD";
 import MainCounter from "./MainCounter";
-import AwardStars from "./AwardStars";
+import AwardStars from "./AwardStars/AwardStars";
 import AchievementsDisplay from "./AchievementsDisplay";
 import { type IPeriod, type IAward, type ICriticalError } from "types";
 import { supabase } from "@/utils/supabase/client";

@@ -1,26 +1,18 @@
 
-import AwardStars from "@/components/AwardStars";
-import HUD from "@/components/HUD/HUD";
-import MainCounter from "@/components/MainCounter";
 import Image from "next/image";
 import imgSprites from "../../public/img/sprites-background.svg"
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
-import AchievementsDisplay from "@/components/AchievementsDisplay";
 import PageContent from "@/components/PageContent";
 import {
   getCurrentPeriod,
   getCriticalErrors, 
-  getElapsedDaysSinceLastCriticalError,
   getAwards,
 } from "./actions";
 
-// export const revalidate = 0
 
 
 export default async function HomePage() {
 
-  // const today = new Date();
-  // const todayISO = today.toISOString().split('T')[0]!;
 
   // Get awards
   const awards = await getAwards()
@@ -31,8 +23,6 @@ export default async function HomePage() {
   // Critical errors
   const criticalErrors = await getCriticalErrors( currentPeriod! )
 
-  // Days elapsed in the current period since the last critical error
-  // const daysSinceLastCriticalError = await getElapsedDaysSinceLastCriticalError(criticalErrors ?? [], currentPeriod?.start_date ?? '', todayISO)
 
   if (!currentPeriod || !awards || !criticalErrors ) return null 
 
