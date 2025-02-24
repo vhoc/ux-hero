@@ -8,11 +8,14 @@ import {
   getCriticalErrors, 
   getAwards,
 } from "./actions";
+import { createClient } from "@/utils/supabase/server";
 
 
 
 export default async function HomePage() {
 
+  const supabase = await createClient()
+  const { data: userData, error: userError } = await supabase.auth.getUser()
 
   // Get awards
   const awards = await getAwards()
@@ -39,6 +42,7 @@ export default async function HomePage() {
         awards={awards}
         currentPeriod={currentPeriod}
         initialCriticalErrors={criticalErrors}
+        userData={userData.user}
       />
 
       {/* BACKGROUND SPRITES */}

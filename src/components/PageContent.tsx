@@ -8,16 +8,18 @@ import AchievementsDisplay from "./AchievementsDisplay";
 import { type IPeriod, type IAward, type ICriticalError } from "types";
 import { supabase } from "@/utils/supabase/client";
 import { getDaysSinceLastCriticalError } from "@/utils/time-calculations";
+import { type User } from "@supabase/supabase-js";
 
 interface PageContentProps {
   awards: IAward[]
   currentPeriod: IPeriod
   initialCriticalErrors: ICriticalError[]
+  userData?: User | null
 }
 
 
 
-const PageContent = ({ awards = [], currentPeriod, initialCriticalErrors }: PageContentProps) => {
+const PageContent = ({ awards = [], currentPeriod, initialCriticalErrors, userData }: PageContentProps) => {
 
   const [criticalErrors, setCriticalErrors] = useState<ICriticalError[]>(initialCriticalErrors)
   const [daysSinceLastCriticalError, setDaysSinceLastCriticalError] = useState<number>(0)
@@ -91,7 +93,7 @@ const PageContent = ({ awards = [], currentPeriod, initialCriticalErrors }: Page
           {/* TWO COLUMNS: AWARDS, BIG COUNTER */}
           <div className="flex flex-col gap-y-10 justify-center items-center w-full h-full xl:flex-row xl:items-start">
   
-            <MainCounter days={daysSinceLastCriticalError} />
+            <MainCounter days={daysSinceLastCriticalError} userData={userData} />
             
           </div>
         </div>

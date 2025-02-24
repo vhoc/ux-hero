@@ -1,13 +1,15 @@
-
+import { type User } from "@supabase/supabase-js"
+import ResetCounterButton from "./ResetCounterbutton/ResetCounterButton"
 
 interface MainCounterProps {
   days: number
+  userData?: User | null
 }
 
-const MainCounter = ({ days = 0 }:MainCounterProps) => {
+const MainCounter = ({ days = 0, userData }:MainCounterProps) => {
 
   return (
-    <div className="flex flex-col gap-[13px] justify-center w-full xl:h-full">
+    <div className="flex flex-col gap-[13px] justify-center items-center w-full xl:h-full">
 
       <span
         className="text-white text-center text-[150px] leading-none "
@@ -38,6 +40,16 @@ const MainCounter = ({ days = 0 }:MainCounterProps) => {
           CRITICAL ERRORS
         </span>
       </div>
+
+      {
+        userData ?
+          <div>
+            <ResetCounterButton />
+          </div>
+        :
+          null
+      }
+      
 
     </div>
   )
