@@ -44,7 +44,7 @@ const AchievementCard = ({ daysSinceLastCriticalError = 0, award, name, state = 
 
         <div className="flex flex-col">
           <span className="capitalize text-lg text-black">{ name }!</span>
-          <p className="text-black text-base">{ `${award.days_required - daysSinceLastCriticalError} days to unlock. Get ${award.description}!` }</p>
+          <p className="text-black text-base">{ `${award.days_required - daysSinceLastCriticalError} days to achieve ${award.description}!` }</p>
         </div>
 
       </div>
