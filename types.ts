@@ -28,6 +28,13 @@ export interface ICriticalError {
   date: string
 }
 
+export interface IMinorIssue {
+  id: number
+  created_at: string
+  descripption?: string
+  date: string
+}
+
 const awards = [
   {
     id: 1,

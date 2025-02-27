@@ -43,7 +43,7 @@ const MainCounter = ({ days = 0, userData }:MainCounterProps) => {
 
       {
         userData ?
-          <div>
+          <div className="flex flex-col">
             <ResetCounterButton />
           </div>
         :

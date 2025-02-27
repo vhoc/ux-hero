@@ -1,7 +1,6 @@
 import imgCoin25 from "../../../../public/img/coin-25.png"
 import imgTimes from "../../../../public/img/times.png"
 import Image from "next/image"
-import { pixelifySans } from "@/fonts"
 import styles from './CoinCounter.module.css';
 
 interface CoinCounterProps {
@@ -28,7 +27,7 @@ const CoinCounter = ({ coins = 0 }: CoinCounterProps) => {
         className="w-[12.82px] h-[12.82px] mb-1"
       />
       
-      <span className={`${pixelifySans.className} text-3xl leading-6`}>{coins}</span>
+      <span className={`text-xl leading-6`}>{coins}</span>
 
 
     </div>

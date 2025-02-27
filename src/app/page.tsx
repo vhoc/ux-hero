@@ -7,9 +7,10 @@ import {
   getCurrentPeriod,
   getCriticalErrors, 
   getAwards,
+  getMinorIssues
 } from "./actions";
 import { createClient } from "@/utils/supabase/server";
-
+import { Toaster } from "@/components/ui/sonner";
 
 
 export default async function HomePage() {
@@ -26,6 +27,9 @@ export default async function HomePage() {
   // Critical errors
   const criticalErrors = await getCriticalErrors( currentPeriod! )
 
+  // Minor issues
+  const minor_issues = await getMinorIssues( currentPeriod! ) ?? []
+
 
   if (!currentPeriod || !awards || !criticalErrors ) return null 
 
@@ -34,15 +38,15 @@ export default async function HomePage() {
       className="
         relative w-full h-full flex flex-col items-center justify-start bg-gradient-to-b from-[#28287d] to-[#151554] 
         text-white px-16
-        md:flex-row md:items-start 
       "
-    > 
+    >
       
       <PageContent
         awards={awards}
         currentPeriod={currentPeriod}
         initialCriticalErrors={criticalErrors}
         userData={userData.user}
+        initialMinorIssues={minor_issues}
       />
 
       {/* BACKGROUND SPRITES */}
@@ -62,7 +66,7 @@ export default async function HomePage() {
         priority
       />
       
-
+      <Toaster />
     </main>
   );
 }

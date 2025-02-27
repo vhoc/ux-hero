@@ -7,14 +7,13 @@ import {
   type ICriticalError,
   type IAward,
   type IAwardsCheckList,
+  type IMinorIssue,
 } from "types";
 
 export const getCurrentPeriod = async (): Promise<IPeriod | null> => {
 
   const today = new Date();
   const todayISO = today.toISOString().split('T')[0];
-  // const todayISO = '2025-03-31'
-  console.log('Today: ', todayISO)
 
   try {
     const supabase = await createClient();
@@ -104,6 +103,66 @@ export const getCriticalErrors = async ( period: IPeriod ): Promise<ICriticalErr
     return null;
   }
 
+}
+
+export const addCriticalError = async (description: string) => {
+  const today = new Date();
+  const todayISO = today.toISOString().split('T')[0];
+
+  try {
+    const supabase = await createClient();
+    const { data, error }: { data: ICriticalError[] | null, error: PostgrestError | null } = await supabase
+      .from('critical_errors')
+      .insert([
+        { description: description, date: todayISO }
+      ])
+      .select();
+
+    if (error) {
+      console.error('Error adding critical error: ', error)
+      return error
+    }
+
+    if (data) {
+      return data
+    } else {
+      console.log('Error adding critical error')
+      return null
+    }
+  } catch (error) {
+    console.error('An unexpected error occurred:', error);
+    return null;
+  }
+}
+
+export const addMinorIssue = async (description: string) => {
+  const today = new Date();
+  const todayISO = today.toISOString().split('T')[0];
+
+  try {
+    const supabase = await createClient();
+    const { data, error }: { data: IMinorIssue[] | null, error: PostgrestError | null } = await supabase
+      .from('minor_issues')
+      .insert([
+        { description: description, date: todayISO }
+      ])
+      .select();
+
+    if (error) {
+      console.error('Error adding minor issue: ', error)
+      return error
+    }
+
+    if (data) {
+      return data
+    } else {
+      console.log('Error adding minor issue')
+      return null
+    }
+  } catch (error) {
+    console.error('An unexpected error occurred:', error);
+    return null;
+  }
 }
 
 export const getElapsedDaysSinceLastCriticalError = async ( critical_errors: ICriticalError[], period_start_date: string, todayISO: string ): Promise<number | null> => {
@@ -198,4 +257,39 @@ export const getAwardsCheckList = async (daysWithoutCriticalError: number, award
 
   return null
 
+}
+
+export const getMinorIssues = async ( period: IPeriod ): Promise<IMinorIssue[] | null> => {
+  try {
+    const supabase = await createClient();
+    const { data, error }: { data: IMinorIssue[] | null, error: PostgrestError | null } = await supabase
+      .from('minor_issues')
+      .select('*')
+      .gte('date', period.start_date)
+      .lte('date', period.end_date)
+
+    if (error) {
+      console.error('Error fetching minor issues: ', error)
+    }
+
+    if (data) {
+      // console.log('Minor issues: ', data)
+      return data
+    } else {
+      console.log('No minor issues found found')
+      return null
+    }
+  } catch (error) {
+    console.error('An unexpected error occurred:', error);
+    return null;
+  }
+
+}
+
+export const signOut = async () => {
+  const supabase = await createClient()
+  const { error: signOutError } = await supabase.auth.signOut()
+  if (signOutError) {
+    console.error('Error signing out: ', signOutError)
+  }
 }

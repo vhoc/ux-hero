@@ -24,7 +24,7 @@ const AwardStars = ({ daysSinceLastCriticalError = 0, awards }:AwardStarsProps) 
     <div className={styles.fadeIn}>
       <div
         className="
-          md:mt-11 min-w-[261px] max-w-max
+          min-w-[261px] max-w-max
           border-4 border-black border-dashed bg-gradient-to-b from-[#171759] to-[#2A2A90] py-[17px] px-[30px] rounded-xl
           flex items-center gap-x-[29px]
           "

@@ -5,6 +5,10 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  env: {
+    MAX_MINOR_ISSUES: process.env.MAX_MINOR_ISSUES,
+  },
+};
 
 export default config;
