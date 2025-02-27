@@ -42,7 +42,7 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0 }: Ac
 
   if (awardsList) {
     return (
-      <div className="flex flex-col gap-y-10">
+      <div className="flex flex-col gap-y-10 px-6">
 
         {/* NOW PLAYING */}
         <div

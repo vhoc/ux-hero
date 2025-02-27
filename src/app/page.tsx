@@ -37,7 +37,7 @@ export default async function HomePage() {
     <main
       className="
         relative w-full h-full flex flex-col items-center justify-start bg-gradient-to-b from-[#28287d] to-[#151554] 
-        text-white px-16
+        text-white
       "
     >
       

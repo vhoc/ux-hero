@@ -24,11 +24,12 @@ const HUD = ({ player_name = "Unknown", daysSinceLastCriticalError = 0, period, 
       <div
         className={clsx(`
         w-full 
-        flex gap-x-[70px] gap-y-10 flex-col lg:flex-row items-center lg:justify-between pt-10
+        flex gap-x-[70px] gap-y-10 flex-col lg:flex-row items-center lg:justify-between lg:items-start pt-10
+        px-4 lg:px-8 xl:px-16
         `, className
         )}
       >
-        <div className="flex gap-x-[70px] gap-y-4 flex-col lg:flex-row">
+        <div className="flex gap-x-[70px] gap-y-4 flex-col md:flex-row">
           <PlayerStatus
             player_name={player_name}
             coins={daysSinceLastCriticalError}

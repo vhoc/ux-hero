@@ -15,11 +15,11 @@ const PlayerStatus = ({ player_name = "Unknown", coins = 0, className }: PlayerS
     )}>
 
       <div className="flex justify-between">
-        <span className="text-sm">PLAYER</span>
+        <span className="text-xs md:text-sm">PLAYER</span>
       </div>
 
       <div className="flex justify-between gap-x-4">
-        <span className="text-2xl">{player_name}</span>
+        <span className="text-xl md:text-2xl">{player_name}</span>
         <CoinCounter coins={coins} />
       </div>
 

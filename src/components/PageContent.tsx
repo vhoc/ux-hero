@@ -140,7 +140,7 @@ const PageContent = ({ awards = [], currentPeriod, initialCriticalErrors, userDa
             userData={userData}
           />
   
-          <div className="flex flex-col gap-y-10 justify-center items-center w-full h-full xl:flex-row xl:items-start">
+          <div className="flex flex-col gap-y-10 md:justify-center items-center w-full h-full xl:flex-row xl:items-start">
   
             <MainCounter days={daysSinceLastCriticalError} userData={userData} />
 

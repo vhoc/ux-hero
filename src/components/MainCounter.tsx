@@ -9,10 +9,10 @@ interface MainCounterProps {
 const MainCounter = ({ days = 0, userData }:MainCounterProps) => {
 
   return (
-    <div className="flex flex-col gap-[13px] justify-center items-center w-full xl:h-full">
+    <div className="flex flex-col gap-[13px] justify-center items-center w-full xl:h-full px-4">
 
       <span
-        className="text-white text-center text-[150px] leading-none "
+        className="text-white text-center text-[100px] md:text-[150px] leading-none "
         style={{
           textShadow: "10px 10px 0px #0d0d38",
         }}
@@ -24,7 +24,7 @@ const MainCounter = ({ days = 0, userData }:MainCounterProps) => {
 
       <div className="flex flex-col">
         <span
-          className="text-center text-white text-2xl"
+          className="text-center text-white text-xl md:text-2xl"
           style={{
             textShadow: "4px 4px 0px #0d0d38",
           }}
@@ -32,7 +32,7 @@ const MainCounter = ({ days = 0, userData }:MainCounterProps) => {
           DAYS WITHOUT
         </span>
         <span
-          className="text-center text-white text-2xl"
+          className="text-center text-white text-xl md:text-2xl"
           style={{
             textShadow: "4px 4px 0px #0d0d38",
           }}

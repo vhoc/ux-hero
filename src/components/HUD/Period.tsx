@@ -15,11 +15,11 @@ const Period = ({ period, className }: PeriodProps) => {
     )}>
 
       <div className="flex justify-between">
-        <span className="text-sm">PERIOD</span>
+        <span className="text-xs md:text-sm">PERIOD</span>
       </div>
 
       <div className="flex justify-between">
-        <span className="text-2xl uppercase">{period.name ?? "No period"}</span>
+        <span className="text-xl md:text-2xl uppercase">{period.name ?? "No period"}</span>
       </div>
 
     </div>
