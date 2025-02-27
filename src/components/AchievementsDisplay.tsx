@@ -42,7 +42,7 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0 }: Ac
 
   if (awardsList) {
     return (
-      <>
+      <div className="flex flex-col gap-y-10">
 
         {/* NOW PLAYING */}
         <div
@@ -99,7 +99,7 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0 }: Ac
         }
 
 
-      </>
+      </div>
     )
   }
 
