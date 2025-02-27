@@ -2,7 +2,7 @@ import imgHeartFull from "@/../public/img/hearts/heart-full.png"
 import imgHeartHalf from "@/../public/img/hearts/heart-half.png"
 import imgHeartEmpty from "@/../public/img/hearts/heart-empty.png"
 import Image from "next/image"
-import { type IMinorIssue } from "types"
+import { type IPeriod, type IMinorIssue } from "types"
 import styles from './Hearts.module.css';
 import { type User } from "@supabase/supabase-js"
 import {
@@ -16,12 +16,13 @@ import AddMinorIssueButton from "@/components/AddMinorIssueButton/AddMinorIssueB
 interface HeartsProps {
   minor_issues?: IMinorIssue[]
   userData?: User | null
+  period: IPeriod
 }
 
 // Maximum amount of minor issues accumulated in the current period before adding a critical error and resetting the counter.
 const MAX_MINOR_ISSUES = Number(process.env.MAX_MINOR_ISSUES)
 
-const Hearts = ({ minor_issues = [], userData }: HeartsProps) => {
+const Hearts = ({ minor_issues = [], userData, period }: HeartsProps) => {
 
   const numberOfIssues = minor_issues.length;
   const numberOfHearts = Number(MAX_MINOR_ISSUES / 2);
@@ -47,7 +48,7 @@ const Hearts = ({ minor_issues = [], userData }: HeartsProps) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="flex gap-4 items-center">
+              <div className="flex gap-4 items-center flex-wrap">
 
                 {Array(fullHearts)
                   .fill(null)
@@ -111,7 +112,7 @@ const Hearts = ({ minor_issues = [], userData }: HeartsProps) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div>
-                    <AddMinorIssueButton />
+                    <AddMinorIssueButton period={period} />
                   </div>
                 </TooltipTrigger>
 

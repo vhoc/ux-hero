@@ -24,7 +24,7 @@ const HUD = ({ player_name = "Unknown", daysSinceLastCriticalError = 0, period, 
       <div
         className={clsx(`
         w-full 
-        flex gap-x-[70px] gap-y-4 flex-col lg:flex-row items-center lg:justify-between pt-10
+        flex gap-x-[70px] gap-y-10 flex-col lg:flex-row items-center lg:justify-between pt-10
         `, className
         )}
       >
@@ -38,10 +38,11 @@ const HUD = ({ player_name = "Unknown", daysSinceLastCriticalError = 0, period, 
           <Period period={period} className="flex-1" />
         </div>
 
-        <div className="flex gap-x-[70px] gap-y-8 flex-col lg:flex-row flex-wrap justify-end">
+        <div className="flex gap-x-[70px] gap-y-8 flex-col-reverse lg:flex-row flex-wrap justify-end">
           <Hearts
             minor_issues={minor_issues}
             userData={userData}
+            period={period}
           />
 
           <AwardStars awards={awards} daysSinceLastCriticalError={daysSinceLastCriticalError} />
