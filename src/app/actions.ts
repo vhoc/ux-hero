@@ -42,6 +42,27 @@ export const getCurrentPeriod = async (): Promise<IPeriod | null> => {
 
 }
 
+export const getCurrentMonthPeriod = async (): Promise<IPeriod> => {
+  const now = new Date();
+  const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  const formatDate = (date: Date): string => {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
+
+  return {
+    id: 0,
+    created_at: "",
+    name: "Current month",
+    start_date: formatDate(startDate),
+    end_date: formatDate(endDate)
+  };
+}
+
 export const daysDiff = async (start_date_string: string, end_date_string: string) => {
 
   const startDateParts = start_date_string.split('-')
@@ -293,3 +314,4 @@ export const signOut = async () => {
     console.error('Error signing out: ', signOutError)
   }
 }
+

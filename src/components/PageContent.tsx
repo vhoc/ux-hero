@@ -12,6 +12,7 @@ import { type User } from "@supabase/supabase-js";
 interface PageContentProps {
   awards: IAward[]
   currentPeriod: IPeriod
+  currentMonthPeriod: IPeriod
   initialCriticalErrors: ICriticalError[]
   userData?: User | null
   initialMinorIssues?: IMinorIssue[]
@@ -19,7 +20,7 @@ interface PageContentProps {
 
 
 
-const PageContent = ({ awards = [], currentPeriod, initialCriticalErrors, userData, initialMinorIssues }: PageContentProps) => {
+const PageContent = ({ awards = [], currentPeriod, currentMonthPeriod, initialCriticalErrors, userData, initialMinorIssues }: PageContentProps) => {
 
   const [criticalErrors, setCriticalErrors] = useState<ICriticalError[]>(initialCriticalErrors)
   const [minorIssues, setMinorIssues] = useState<IMinorIssue[]>(initialMinorIssues ?? [])
@@ -82,7 +83,7 @@ const PageContent = ({ awards = [], currentPeriod, initialCriticalErrors, userDa
       const updatedMinorIssue: IMinorIssue = payload.new as IMinorIssue
 
       if (updateType === 'INSERT') {
-        if (updatedMinorIssue.date >= currentPeriod.start_date && updatedMinorIssue.date <= currentPeriod.end_date) {
+        if (updatedMinorIssue.date >= currentMonthPeriod.start_date && updatedMinorIssue.date <= currentMonthPeriod.end_date) {
           setMinorIssues(prevMinorIssues => {
             return [...prevMinorIssues, updatedMinorIssue]
           })
@@ -98,7 +99,7 @@ const PageContent = ({ awards = [], currentPeriod, initialCriticalErrors, userDa
 
       if (updateType === 'UPDATE') {
         // if payload.new.date is between currentPeriod.start_date and currentPeriod.end_date, replace the minorIssue item of the same id in the state.
-        if (updatedMinorIssue.date >= currentPeriod.start_date && updatedMinorIssue.date <= currentPeriod.end_date) {
+        if (updatedMinorIssue.date >= currentMonthPeriod.start_date && updatedMinorIssue.date <= currentMonthPeriod.end_date) {
           setMinorIssues(prevMinorIssues => {
             return prevMinorIssues.map(minorIssue => {
               if (minorIssue.id === updatedMinorIssue.id) {
@@ -135,16 +136,21 @@ const PageContent = ({ awards = [], currentPeriod, initialCriticalErrors, userDa
             player_name="UXNTEAM"
             daysSinceLastCriticalError={daysSinceLastCriticalError}
             period={currentPeriod}
+            currentMonthPeriod={currentMonthPeriod}
             awards={awards}
             minor_issues={minorIssues}
             userData={userData}
           />
   
-          <div className="flex flex-col gap-y-10 md:justify-center items-center w-full h-full xl:flex-row xl:items-start">
+          <div className="flex flex-col gap-y-10 md:justify-center items-center w-full h-full xl:px-16 xl:flex-row xl:items-start">
   
             <MainCounter days={daysSinceLastCriticalError} userData={userData} />
 
-            <AchievementsDisplay awards={awards} daysSinceLastCriticalError={daysSinceLastCriticalError} />
+            <AchievementsDisplay
+              awards={awards}
+              daysSinceLastCriticalError={daysSinceLastCriticalError}
+              minorIssues={minorIssues}
+            />
             
           </div>
         </div>

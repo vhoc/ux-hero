@@ -1,12 +1,14 @@
 import AchievementCard from "./AchievementCard/AchievementCard"
-import { type IAwardsCheckList, type IAward } from "types"
+import { type IAwardsCheckList, type IAward, type IMinorIssue } from "types"
 
 interface AchievementsDisplayProps {
   awards: IAward[]
   daysSinceLastCriticalError: number
+  minorIssues: IMinorIssue[]
 }
 
 const getAwardsCheckList = (daysWithoutCriticalError: number, awards: IAward[]): IAwardsCheckList | null => {
+
 
   if ( awards && awards.length >= 1 ) {
 
@@ -35,10 +37,11 @@ const getAwardsCheckList = (daysWithoutCriticalError: number, awards: IAward[]):
 
 }
 
-const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0 }: AchievementsDisplayProps) => {
+const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, minorIssues = [] }: AchievementsDisplayProps) => {
 
   // Select the award that is currently playing:
   const awardsList = getAwardsCheckList(daysSinceLastCriticalError, awards)
+  const MAX_MINOR_ISSUES = Number(process.env.MAX_MINOR_ISSUES)
 
   if (awardsList) {
     return (
@@ -57,6 +60,7 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0 }: Ac
                 award={awardsList.now_playing}
                 state="unlocked"
                 name={awardsList.now_playing.name}
+                lost={ minorIssues && minorIssues.length >= MAX_MINOR_ISSUES }
               />
               :
               null

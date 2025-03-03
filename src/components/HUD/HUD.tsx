@@ -11,13 +11,14 @@ interface HUDProps {
   player_name?: string
   daysSinceLastCriticalError: number
   period: IPeriod
+  currentMonthPeriod: IPeriod
   className?: string
   awards: IAward[]
   minor_issues?: IMinorIssue[]
   userData?: User | null
 }
 
-const HUD = ({ player_name = "Unknown", daysSinceLastCriticalError = 0, period, className, awards, minor_issues, userData }: HUDProps) => {
+const HUD = ({ player_name = "Unknown", daysSinceLastCriticalError = 0, period, currentMonthPeriod, className, awards, minor_issues, userData }: HUDProps) => {
 
   return (
     <div className={styles.slideIn}>
@@ -43,7 +44,7 @@ const HUD = ({ player_name = "Unknown", daysSinceLastCriticalError = 0, period, 
           <Hearts
             minor_issues={minor_issues}
             userData={userData}
-            period={period}
+            currentMonthPeriod={currentMonthPeriod}
           />
 
           <AwardStars awards={awards} daysSinceLastCriticalError={daysSinceLastCriticalError} />
