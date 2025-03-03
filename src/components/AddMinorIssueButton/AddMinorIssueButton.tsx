@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog"
 import { useState } from "react"
-import { addMinorIssue, getMinorIssues, addCriticalError } from "@/app/actions"
+import { addMinorIssue, getMinorIssues } from "@/app/actions"
 import { toast } from "sonner"
 import Image from "next/image"
 import imgSword from "@/../public/img/hearts/sword.png"
@@ -24,7 +24,6 @@ interface AddMinorIssueButtonProps {
 
 const AddMinorIssueButton = ({ period }: AddMinorIssueButtonProps) => {
 
-  const MAX_MINOR_ISSUES = Number(process.env.MAX_MINOR_ISSUES)
   const [description, setDescription] = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -43,12 +42,6 @@ const AddMinorIssueButton = ({ period }: AddMinorIssueButtonProps) => {
           // Check if the new amount of minor issues is equal or greater than [MAX_MINOR_ISSUES].
           // If so, add 1 critical error with the description: "Accumulated [MAX_MINOR_ISSUES] minor issues"
           getMinorIssues(period)
-            .then(minor_issues => {
-              if (minor_issues && minor_issues.length >= MAX_MINOR_ISSUES) {
-                addCriticalError(`Accumulated ${MAX_MINOR_ISSUES} minor issues`)
-                  .catch(error => { console.error('error adding critical error: ', error) })
-              }
-            })
             .catch(error => { console.error('error fetching minor issues: ', error) })
 
           toast.success("Error menor agregado", {

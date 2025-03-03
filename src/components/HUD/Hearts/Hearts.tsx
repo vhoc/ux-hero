@@ -12,17 +12,20 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import AddMinorIssueButton from "@/components/AddMinorIssueButton/AddMinorIssueButton"
+// import { getCurrentMonthPeriod } from "@/app/actions"
 
 interface HeartsProps {
   minor_issues?: IMinorIssue[]
   userData?: User | null
-  period: IPeriod
+  currentMonthPeriod: IPeriod
 }
 
 // Maximum amount of minor issues accumulated in the current period before adding a critical error and resetting the counter.
 const MAX_MINOR_ISSUES = Number(process.env.MAX_MINOR_ISSUES)
 
-const Hearts = ({ minor_issues = [], userData, period }: HeartsProps) => {
+const Hearts = ({ minor_issues = [], userData, currentMonthPeriod }: HeartsProps) => {
+
+  const period = currentMonthPeriod
 
   const numberOfIssues = minor_issues.length;
   const numberOfHearts = Number(MAX_MINOR_ISSUES / 2);
@@ -90,24 +93,24 @@ const Hearts = ({ minor_issues = [], userData, period }: HeartsProps) => {
               </div>
             </TooltipTrigger>
 
-            <TooltipContent>
-              <p className="text-center max-w-72 text-xs">
-                Every minor issue detected will deal half a heart damage.
+            <TooltipContent side="bottom" className="py-4">
+              <p className="text-center max-w-72 md:max-w-md text-xs">
+                Health decreases half a heart for every minor issue reported.
               </p>
 
-              <p className="text-center max-w-72 text-xs mt-2">
-                If you lose all your health, the counter will reset to ZERO.
+              <p className="text-center max-w-72 md:max-w-md text-xs mt-2">
+                If you lose all your health, the current award will be lost.
               </p>
 
-              <p className="text-center max-w-72 text-xs mt-2">
-                Watch out!!
+              <p className="text-center max-w-72 md:max-w-md text-xs mt-2">
+                Health will be replenished at the start of the next month.
               </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
         {
-          userData ?
+          userData && numberOfIssues < MAX_MINOR_ISSUES ?
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -117,7 +120,7 @@ const Hearts = ({ minor_issues = [], userData, period }: HeartsProps) => {
                 </TooltipTrigger>
 
                 <TooltipContent>
-                  <p className="text-center max-w-72 text-xs">
+                  <p className="text-center max-w-72 md:max-w-md text-xs">
                     Register a minor issue in the database.
                   </p>
                 </TooltipContent>

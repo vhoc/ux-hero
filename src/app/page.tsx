@@ -5,9 +5,10 @@ import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import PageContent from "@/components/PageContent";
 import {
   getCurrentPeriod,
+  getCurrentMonthPeriod,
   getCriticalErrors, 
   getAwards,
-  getMinorIssues
+  getMinorIssues,
 } from "./actions";
 import { createClient } from "@/utils/supabase/server";
 import { Toaster } from "@/components/ui/sonner";
@@ -24,11 +25,14 @@ export default async function HomePage() {
   // Current period
   const currentPeriod  = await getCurrentPeriod()
 
+  // Current month period
+  const currentMonthPeriod = await getCurrentMonthPeriod()
+
   // Critical errors
   const criticalErrors = await getCriticalErrors( currentPeriod! )
 
   // Minor issues
-  const minor_issues = await getMinorIssues( currentPeriod! ) ?? []
+  const minor_issues = await getMinorIssues( currentMonthPeriod ) ?? []
 
 
   if (!currentPeriod || !awards || !criticalErrors ) return null 
@@ -44,6 +48,7 @@ export default async function HomePage() {
       <PageContent
         awards={awards}
         currentPeriod={currentPeriod}
+        currentMonthPeriod={currentMonthPeriod}
         initialCriticalErrors={criticalErrors}
         userData={userData.user}
         initialMinorIssues={minor_issues}
