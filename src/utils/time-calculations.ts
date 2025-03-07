@@ -24,9 +24,9 @@ export const daysDiff = (start_date_string: string, end_date_string: string) => 
 
 }
 
-export const getElapsedDaysOfPeriod = (start_date: string) => {
+export const getElapsedDaysOfPeriod = (start_date: string, today: Date) => {
 
-  const today = new Date();
+  // const today = new Date();
 
   // Get days of difference between today and start_date
   const daysElapsed = Math.floor((today.getTime() - new Date(start_date).getTime()) / (1000 * 60 * 60 * 24));
@@ -35,11 +35,13 @@ export const getElapsedDaysOfPeriod = (start_date: string) => {
 
 }
 
-export const getDaysSinceLastCriticalError = ( critical_errors: ICriticalError[], period_start_date: string, todayISO: string ): number | null => {
+export const getDaysSinceLastCriticalError = ( critical_errors: ICriticalError[], period_start_date: string, today: Date ): number | null => {
+
+  const todayISO: string = today.toISOString().split('T')[0]!;
 
   // If no critical errors, just return the days elapsed in the current period
   if ( !critical_errors || critical_errors.length < 1 ) {
-    const elapsedDays = getElapsedDaysOfPeriod(period_start_date)
+    const elapsedDays = getElapsedDaysOfPeriod(period_start_date, today)
     return elapsedDays
   }
 

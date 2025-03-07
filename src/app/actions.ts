@@ -10,10 +10,10 @@ import {
   type IMinorIssue,
 } from "types";
 
-export const getCurrentPeriod = async (): Promise<IPeriod | null> => {
+export const getCurrentPeriod = async (todayISO: string): Promise<IPeriod | null> => {
 
-  const today = new Date();
-  const todayISO = today.toISOString().split('T')[0];
+  // const today = new Date();
+  // const todayISO = today.toISOString().split('T')[0];
 
   try {
     const supabase = await createClient();
@@ -42,8 +42,8 @@ export const getCurrentPeriod = async (): Promise<IPeriod | null> => {
 
 }
 
-export const getCurrentMonthPeriod = async (): Promise<IPeriod> => {
-  const now = new Date();
+export const getCurrentMonthPeriod = async (now: Date): Promise<IPeriod> => {
+  // const now = new Date();
   const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
   const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 

@@ -10,6 +10,7 @@ import { getDaysSinceLastCriticalError } from "@/utils/time-calculations";
 import { type User } from "@supabase/supabase-js";
 
 interface PageContentProps {
+  today: Date
   awards: IAward[]
   currentPeriod: IPeriod
   currentMonthPeriod: IPeriod
@@ -20,7 +21,7 @@ interface PageContentProps {
 
 
 
-const PageContent = ({ awards = [], currentPeriod, currentMonthPeriod, initialCriticalErrors, userData, initialMinorIssues }: PageContentProps) => {
+const PageContent = ({ today, awards = [], currentPeriod, currentMonthPeriod, initialCriticalErrors, userData, initialMinorIssues }: PageContentProps) => {
 
   const [criticalErrors, setCriticalErrors] = useState<ICriticalError[]>(initialCriticalErrors)
   const [minorIssues, setMinorIssues] = useState<IMinorIssue[]>(initialMinorIssues ?? [])
@@ -122,9 +123,10 @@ const PageContent = ({ awards = [], currentPeriod, currentMonthPeriod, initialCr
 
   // Calculate the days since the last critical error in the current period
   useEffect(() => {
-    const result = getDaysSinceLastCriticalError(criticalErrors, currentPeriod.start_date, new Date().toISOString().split('T')[0]!)
+    const result = getDaysSinceLastCriticalError(criticalErrors, currentPeriod.start_date, today)
+    console.log('result ',result)
     setDaysSinceLastCriticalError(result ?? 0)
-  }, [criticalErrors, currentPeriod])
+  }, [criticalErrors, currentPeriod, today])
  
 
   if ( currentPeriod && awards && awards.length >= 1 ) {

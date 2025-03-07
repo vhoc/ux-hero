@@ -19,14 +19,20 @@ export default async function HomePage() {
   const supabase = await createClient()
   const { data: userData, error: userError } = await supabase.auth.getUser()
 
+  // Get today's date
+  // const today = new Date();
+  const today = new Date('2025-01-06T18:51:14.775Z');
+
+  const todayISO: string = today.toISOString().split('T')[0]!;
+
   // Get awards
   const awards = await getAwards()
 
   // Current period
-  const currentPeriod  = await getCurrentPeriod()
+  const currentPeriod  = await getCurrentPeriod(todayISO)
 
   // Current month period
-  const currentMonthPeriod = await getCurrentMonthPeriod()
+  const currentMonthPeriod = await getCurrentMonthPeriod(today)
 
   // Critical errors
   const criticalErrors = await getCriticalErrors( currentPeriod! )
@@ -35,7 +41,17 @@ export default async function HomePage() {
   const minor_issues = await getMinorIssues( currentMonthPeriod ) ?? []
 
 
-  if (!currentPeriod || !awards || !criticalErrors ) return null 
+  if (!currentPeriod || !awards || !criticalErrors ) return null
+
+  // DEBUG
+  const debugData = {
+    today,
+    todayISO,
+    currentPeriod,
+    currentMonthPeriod,
+  }
+
+  console.log("DEBUG DATA =", debugData)
 
   return (
     <main
@@ -46,6 +62,7 @@ export default async function HomePage() {
     >
       
       <PageContent
+        today={today}
         awards={awards}
         currentPeriod={currentPeriod}
         currentMonthPeriod={currentMonthPeriod}
@@ -64,8 +81,6 @@ export default async function HomePage() {
           position: "absolute",
           bottom: 0,
           left: 0,
-          // objectFit: "contain",
-          // objectPosition: "bottom left",
         }}
         className="z-0"
         priority
