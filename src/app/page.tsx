@@ -3,16 +3,16 @@ import Image from "next/image";
 import imgSprites from "../../public/img/sprites-background.svg"
 import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import PageContent from "@/components/PageContent";
-import {
-  getCurrentPeriod,
-  getCurrentMonthPeriod,
-  getCriticalErrors, 
-  getAwards,
-  getMinorIssues,
-} from "./actions";
+import { getAwards } from "@/app/actions/awards";
+import { getIncidents } from "@/app/actions/incidents";
+import { checkIfHearsWereRestored } from "@/app/actions/health";
+import { getCurrentPeriod, getCurrentMonthPeriod, getAllPeriods } from "@/app/actions/periods";
+import { getCriticalErrors } from "@/app/actions/critical_errors";
 import { createClient } from "@/utils/supabase/server";
 import { Toaster } from "@/components/ui/sonner";
 
+// For the checkIfHearsWereRestored function
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
 
@@ -21,7 +21,8 @@ export default async function HomePage() {
 
   // Get today's date
   // const today = new Date();
-  const today = new Date('2025-01-06T18:51:14.775Z');
+  const today = new Date('2025-05-01T18:51:14.775Z');
+  const currentYear = Number(process.env.CURRENT_YEAR)
 
   const todayISO: string = today.toISOString().split('T')[0]!;
 
@@ -31,6 +32,9 @@ export default async function HomePage() {
   // Current period
   const currentPeriod  = await getCurrentPeriod(todayISO)
 
+  // Get all periods
+  const allPeriods = await getAllPeriods(currentYear) ?? []
+
   // Current month period
   const currentMonthPeriod = await getCurrentMonthPeriod(today)
 
@@ -38,20 +42,25 @@ export default async function HomePage() {
   const criticalErrors = await getCriticalErrors( currentPeriod! )
 
   // Minor issues
-  const minor_issues = await getMinorIssues( currentMonthPeriod ) ?? []
+  const incidents = await getIncidents( currentMonthPeriod ) ?? []
+
+  // Hearts restoration check & event
+  await checkIfHearsWereRestored(today)
+
+
 
 
   if (!currentPeriod || !awards || !criticalErrors ) return null
 
   // DEBUG
-  const debugData = {
-    today,
-    todayISO,
-    currentPeriod,
-    currentMonthPeriod,
-  }
+  // const debugData = {
+  //   today,
+  //   todayISO,
+  //   currentPeriod,
+  //   currentMonthPeriod,
+  // }
 
-  console.log("DEBUG DATA =", debugData)
+  // console.log("DEBUG DATA =", debugData)
 
   return (
     <main
@@ -64,11 +73,12 @@ export default async function HomePage() {
       <PageContent
         today={today}
         awards={awards}
-        currentPeriod={currentPeriod}
+        // currentPeriod={currentPeriod}// DEPRECATED
         currentMonthPeriod={currentMonthPeriod}
         initialCriticalErrors={criticalErrors}
+        initialPeriods={allPeriods}
         userData={userData.user}
-        initialMinorIssues={minor_issues}
+        initialIncidents={incidents}
       />
 
       {/* BACKGROUND SPRITES */}

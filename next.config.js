@@ -7,7 +7,9 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
   env: {
-    MAX_MINOR_ISSUES: process.env.MAX_MINOR_ISSUES,
+    MAX_INCIDENTS: process.env.MAX_INCIDENTS,
+    CURRENT_YEAR: process.env.CURRENT_YEAR,
+    INCIDENT_DAMAGE: process.env.INCIDENT_DAMAGE,
   },
 };
 

@@ -4,7 +4,7 @@ import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import { pixelifySans } from "@/fonts";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
-import { signOut } from "@/app/actions";
+import { signOut } from "@/app/actions/auth";
 
 const Nav = async () => {
 

@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog"
 import { useState } from "react"
-import { addCriticalError } from "@/app/actions"
+import { addCriticalError } from "@/app/actions/critical_errors"
 import { toast } from "sonner"
 import Image from "next/image"
 import imgSkull from "@/../public/img/skull.png"
