@@ -20,12 +20,12 @@ export interface IPeriod {
   name: string
   start_date: string
   end_date: string
-  achieved_1: boolean
-  achieved_2: boolean
-  achieved_3: boolean
   health_1: number
   health_2: number
   health_3: number
+  achieved_1: number
+  achieved_2: number
+  achieved_3: number
 }
 
 export interface ISingleMonthPeriod {

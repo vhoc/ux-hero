@@ -6,10 +6,11 @@ import PageContent from "@/components/PageContent";
 import { getAwards } from "@/app/actions/awards";
 import { getIncidents } from "@/app/actions/incidents";
 import { checkIfHearsWereRestored } from "@/app/actions/health";
-import { getCurrentPeriod, getCurrentMonthPeriod, getAllPeriods } from "@/app/actions/periods";
+import { getCurrentPeriod, getCurrentMonthPeriod, getAllPeriods, setPeriodAward } from "@/app/actions/periods";
 import { getCriticalErrors } from "@/app/actions/critical_errors";
 import { createClient } from "@/utils/supabase/server";
 import { Toaster } from "@/components/ui/sonner";
+import { getDaysSinceLastCriticalError } from "@/utils/time-calculations";
 
 // For the checkIfHearsWereRestored function
 export const dynamic = 'force-dynamic';
@@ -21,7 +22,7 @@ export default async function HomePage() {
 
   // Get today's date
   // const today = new Date();
-  const today = new Date('2025-05-01T18:51:14.775Z');
+  const today = new Date('2025-02-01T18:51:14.775Z');
   const currentYear = Number(process.env.CURRENT_YEAR)
 
   const todayISO: string = today.toISOString().split('T')[0]!;
@@ -41,13 +42,17 @@ export default async function HomePage() {
   // Critical errors
   const criticalErrors = await getCriticalErrors( currentPeriod! )
 
+  // Calculate the days since the last critical error in the current period
+  const daysSinceLastCriticalError = getDaysSinceLastCriticalError(criticalErrors!, currentPeriod!.start_date, today)
+
   // Minor issues
   const incidents = await getIncidents( currentMonthPeriod ) ?? []
 
   // Hearts restoration check & event
   await checkIfHearsWereRestored(today)
 
-
+  // Set the achieved awards (only once per month)
+  await setPeriodAward(today, currentPeriod!.id, daysSinceLastCriticalError!)
 
 
   if (!currentPeriod || !awards || !criticalErrors ) return null
@@ -73,7 +78,7 @@ export default async function HomePage() {
       <PageContent
         today={today}
         awards={awards}
-        // currentPeriod={currentPeriod}// DEPRECATED
+        initialCurrentPeriod={currentPeriod}
         currentMonthPeriod={currentMonthPeriod}
         initialCriticalErrors={criticalErrors}
         initialPeriods={allPeriods}

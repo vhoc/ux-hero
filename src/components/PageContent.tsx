@@ -13,7 +13,7 @@ import { calculateCurrentPeriod } from "@/utils/misc";
 interface PageContentProps {
   today: Date
   awards: IAward[]
-  // currentPeriod: IPeriod // DEPRECATED
+  initialCurrentPeriod: IPeriod
   currentMonthPeriod: ISingleMonthPeriod
   initialCriticalErrors: ICriticalError[]
   initialPeriods: IPeriod[]
@@ -23,21 +23,41 @@ interface PageContentProps {
 
 
 
-const PageContent = ({ today, awards = [], currentMonthPeriod, initialCriticalErrors, initialPeriods, userData, initialIncidents }: PageContentProps) => {
+const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPeriod, initialCriticalErrors, initialPeriods, userData, initialIncidents }: PageContentProps) => {
 
   const [periods, setPeriods] = useState<IPeriod[]>(initialPeriods)
-  const [currentPeriod, setCurrentPeriod] = useState<IPeriod | null>(null)
+  const [currentPeriod, setCurrentPeriod] = useState<IPeriod | null>(initialCurrentPeriod)
   const [criticalErrors, setCriticalErrors] = useState<ICriticalError[]>(initialCriticalErrors)
   const [incidents, setIncidents] = useState<IIncident[]>(initialIncidents ?? [])
   const [daysSinceLastCriticalError, setDaysSinceLastCriticalError] = useState<number>(0)
 
   // Calculate the current period according to today's date
+  // useEffect(() => {
+  //   const calculatedCurrentPeriod = calculateCurrentPeriod(today, periods)
+  //   console.log('calculatedCurrentPeriod: ', calculatedCurrentPeriod)
+  //   if (calculatedCurrentPeriod) {
+  //     setCurrentPeriod(calculatedCurrentPeriod)
+  //   }
+  // }, [supabase, periods, today])
+
+  // Live update / Real time updates for the current period
   useEffect(() => {
-    const calculatedCurrentPeriod = calculateCurrentPeriod(today, periods)
-    if (calculatedCurrentPeriod) {      
-      setCurrentPeriod(calculatedCurrentPeriod)
+    const channel = supabase.channel('periods').on('postgres_changes', {
+      event: '*', schema: 'public', table: 'periods', filter: `id=eq.${initialCurrentPeriod?.id}`
+    }, (payload) => {
+      const updateType = payload.eventType
+      const updatedPeriod: IPeriod = payload.new as IPeriod
+
+      if (updateType === 'UPDATE') {
+        setCurrentPeriod(updatedPeriod)
+      }
+
+    }).subscribe()
+
+    return () => {
+      void supabase.removeChannel(channel)
     }
-  }, [periods, today])
+  }, [supabase])
 
   //Live update / Real time updates for the periods
   useEffect(() => {
@@ -52,8 +72,10 @@ const PageContent = ({ today, awards = [], currentMonthPeriod, initialCriticalEr
         setPeriods(prevPeriods => {
           return prevPeriods.map(period => {
             if (period.id === updatedPeriod.id) {
+              // setCurrentPeriod(updatedPeriod)
               return updatedPeriod
             }
+            // setCurrentPeriod(period)
             return period
           })
         })
@@ -72,7 +94,7 @@ const PageContent = ({ today, awards = [], currentMonthPeriod, initialCriticalEr
     const channel = supabase.channel('critical_errors').on('postgres_changes', {
       event: '*', schema: 'public', table: 'critical_errors'
     }, (payload) => {
-      
+
       const updateType = payload.eventType
       const updatedCriticalError: ICriticalError = payload.new as ICriticalError
 
@@ -105,7 +127,7 @@ const PageContent = ({ today, awards = [], currentMonthPeriod, initialCriticalEr
         }
       }
 
-      
+
     }).subscribe()
 
     return () => {
@@ -119,7 +141,7 @@ const PageContent = ({ today, awards = [], currentMonthPeriod, initialCriticalEr
     const channelIncidents = supabase.channel('incidents').on('postgres_changes', {
       event: '*', schema: 'public', table: 'incidents'
     }, (payload) => {
-      
+
       const updateType = payload.eventType
       const updatedIncident: IIncident = payload.new as IIncident
 
@@ -152,7 +174,7 @@ const PageContent = ({ today, awards = [], currentMonthPeriod, initialCriticalEr
         }
       }
 
-      
+
     }).subscribe()
 
     return () => {
@@ -167,31 +189,31 @@ const PageContent = ({ today, awards = [], currentMonthPeriod, initialCriticalEr
       const result = getDaysSinceLastCriticalError(criticalErrors, currentPeriod.start_date, today)
 
       // console.log('result ',result)
-    setDaysSinceLastCriticalError(result ?? 0)
-    }    
-    
-  }, [criticalErrors, currentPeriod, today])
- 
+      setDaysSinceLastCriticalError(result ?? 0)
+    }
 
-  if ( currentPeriod && awards && awards.length >= 1 ) {
+  }, [criticalErrors, currentPeriod, today])
+
+
+  if (currentPeriod && awards && awards.length >= 1) {
     return (
       <>
-      
+
         <div className="flex flex-col gap-y-16 w-full md:flex-1 h-full z-10">
           <HUD
             today={today}
             player_name="UXNTEAM"
             daysSinceLastCriticalError={daysSinceLastCriticalError}
-            periods={periods}
+            // periods={periods}
             period={currentPeriod}
             currentMonthPeriod={currentMonthPeriod}
             awards={awards}
             incidents={incidents}
             userData={userData}
           />
-  
+
           <div className="flex flex-col gap-y-10 md:justify-center items-center w-full h-full xl:px-16 xl:flex-row xl:items-start">
-  
+
             <MainCounter days={daysSinceLastCriticalError} userData={userData} />
 
             <AchievementsDisplay
@@ -199,18 +221,18 @@ const PageContent = ({ today, awards = [], currentMonthPeriod, initialCriticalEr
               daysSinceLastCriticalError={daysSinceLastCriticalError}
               minorIssues={incidents}
             />
-            
+
           </div>
         </div>
-  
-      
+
+
       </>
     )
   }
 
   return <div>No data</div>
 
-  
+
 
 }
 

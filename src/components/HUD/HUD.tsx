@@ -13,7 +13,6 @@ interface HUDProps {
   player_name?: string
   daysSinceLastCriticalError: number
   period: IPeriod
-  periods: IPeriod[]
   currentMonthPeriod: ISingleMonthPeriod
   className?: string
   awards: IAward[]
@@ -21,12 +20,17 @@ interface HUDProps {
   userData?: User | null
 }
 
-const HUD = ({ today, player_name = "Unknown", daysSinceLastCriticalError = 0, period, periods, currentMonthPeriod, className, awards, userData }: HUDProps) => {
+const HUD = ({ today, player_name = "Unknown", daysSinceLastCriticalError = 0, period, currentMonthPeriod, className, awards, userData }: HUDProps) => {
 
   // Select the health value from the period that matches the month of today's date.
   const monthOfQuarter = calculateMonthOfQuarter(today)
   const healthKey = `health_${monthOfQuarter}` as keyof IPeriod
   const currentHealth = Number(period[healthKey])
+  const achieved_awards = [
+    period.achieved_1 ?? null,
+    period.achieved_2 ?? null,
+    period.achieved_3 ?? null,
+  ]
 
   return (
     <div className={styles.slideIn}>
@@ -58,7 +62,10 @@ const HUD = ({ today, player_name = "Unknown", daysSinceLastCriticalError = 0, p
             currentMonthPeriod={currentMonthPeriod}
           />
 
-          <AwardStars awards={awards} daysSinceLastCriticalError={daysSinceLastCriticalError} />
+          <AwardStars
+            awards={awards}
+            achieved_awards={achieved_awards}
+          />
         </div>
 
       </div>

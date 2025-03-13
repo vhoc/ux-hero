@@ -40,7 +40,6 @@ export const setPeriodHealth = async (health_amount: number, health_column: stri
 }
 
 export const setHeartsRestored = async (month: number, value: boolean) => {
-  console.log('setHeartsRestored: ', month, value)
   try {
     const supabase = await createClient();
       const { error }: { data: IHeartsRestored[] | null, error: PostgrestError | null } = await supabase

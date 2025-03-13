@@ -1,6 +1,7 @@
 "use server"
 import { type PostgrestError } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/server";
+import { calculateMonthOfQuarter } from "@/utils/misc";
 import {
   type IPeriod,
   type ISingleMonthPeriod,
@@ -92,4 +93,74 @@ export const getElapsedDaysOfPeriod = async (start_date: string) => {
 
   return daysElapsed;
 
+}
+
+export const setPeriodAward = async (date: Date, period_id: number, daysSinceLastCriticalError: number): Promise<void> => {
+
+  console.log('setPeriodAward props')
+  console.log(JSON.stringify({ date, period_id, daysSinceLastCriticalError }, null, 2))
+
+  // 1. Check if the current month is the first, second or third month of the quarter
+  const pastMonthOfQuarter = calculateMonthOfQuarter(date) - 1
+  const columnToUpdate = `achieved_${pastMonthOfQuarter}` as keyof IPeriod
+  const awardId = daysSinceLastCriticalError >= 30 && daysSinceLastCriticalError < 60 ? 1 :
+    daysSinceLastCriticalError >= 60 && daysSinceLastCriticalError < 90 ? 2 :
+    daysSinceLastCriticalError >= 90 ? 3 : null
+
+  console.log('setPeriodAward values')
+  console.log(JSON.stringify({ pastMonthOfQuarter, columnToUpdate, awardId }, null, 2))
+
+  // 2. Check if the 'achieved_x' column is null, if it is, update it to which award id?
+  try {
+    const supabase = await createClient();
+    const { data, error }: { data: IPeriod[] | null, error: PostgrestError | null } = await supabase
+      .from('periods')
+      .select('*')
+      .eq('id', period_id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching periods: ', error)
+    }
+
+    if (data) {
+      console.log('data[columnToUpdate as keyof typeof data]: ', data[columnToUpdate as keyof typeof data])
+      // Check if the 'achieved_x' column is null, if it is, update it to which award id?
+      // if (data[columnToUpdate as keyof typeof data] === null && awardId && awardId > 0) {      
+       await updateMonthAchievedAward(period_id, pastMonthOfQuarter, awardId)
+      
+    } else {
+      console.log('No periods found')
+    }
+  } catch (error) {
+    console.error('An unexpected error occurred:', error);
+  }
+
+}
+
+export const updateMonthAchievedAward = async (period_id: number, month_of_quarter: number, award_id: number | null): Promise<void> => {
+  console.log('updateMonthAchievedAward props')
+  console.log(JSON.stringify({ period_id, month_of_quarter, award_id }, null, 2))
+
+  try {
+    const supabase = await createClient();
+    const { data, error }: { data: IPeriod[] | null, error: PostgrestError | null } = await supabase
+      .from('periods')
+      .update({ [`achieved_${month_of_quarter}`]: award_id })
+      .eq('id', period_id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating period: ', error)
+    }
+
+    if (data) {
+      // console.log('data: ', data)
+    } else {
+      console.log('No period updated')
+    }
+  } catch (error) {
+    console.error('An unexpected error occurred:', error);
+  }
 }
