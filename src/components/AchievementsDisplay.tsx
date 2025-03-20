@@ -1,13 +1,14 @@
 import AchievementCard from "./AchievementCard/AchievementCard"
-import { type IAwardsCheckList, type IAward, type IMinorIssue } from "types"
+import { type IAwardsCheckList, type IAward, type IIncident } from "types"
 
 interface AchievementsDisplayProps {
   awards: IAward[]
   daysSinceLastCriticalError: number
-  minorIssues: IMinorIssue[]
+  minorIssues: IIncident[]
+  currentHealth: number
 }
 
-const getAwardsCheckList = (daysWithoutCriticalError: number, awards: IAward[]): IAwardsCheckList | null => {
+const getAwardsCheckList = (daysWithoutCriticalError: number, awards: IAward[] ): IAwardsCheckList | null => {
 
 
   if ( awards && awards.length >= 1 ) {
@@ -37,11 +38,13 @@ const getAwardsCheckList = (daysWithoutCriticalError: number, awards: IAward[]):
 
 }
 
-const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, minorIssues = [] }: AchievementsDisplayProps) => {
+const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, minorIssues = [], currentHealth }: AchievementsDisplayProps) => {
 
   // Select the award that is currently playing:
   const awardsList = getAwardsCheckList(daysSinceLastCriticalError, awards)
   const MAX_MINOR_ISSUES = Number(process.env.MAX_MINOR_ISSUES)
+
+  
 
   if (awardsList) {
     return (
@@ -60,7 +63,9 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, mino
                 award={awardsList.now_playing}
                 state="unlocked"
                 name={awardsList.now_playing.name}
-                lost={ minorIssues && minorIssues.length >= MAX_MINOR_ISSUES }
+                currentHealth={currentHealth}
+                // bonus_status={ minorIssues && minorIssues.length >= MAX_MINOR_ISSUES ? "lost" : "full" }
+                // lost={ minorIssues && minorIssues.length >= MAX_MINOR_ISSUES }
               />
               :
               null
@@ -87,6 +92,7 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, mino
                         award={awardsList.next[index]!}
                         state={ awardsList.next.length - 1 === index ? "locked" : "upcoming" }
                         name={award.name}
+                        currentHealth={currentHealth}
                       />
                     )
                   }

@@ -112,3 +112,23 @@ export const checkIfHearsWereRestored = async (date: Date) => {
   
 
 }
+
+export const restoreHealth = async (date: Date) => {
+
+  const MAX_INCIDENTS = Number(process.env.MAX_INCIDENTS)
+
+  const todayISO = date.toISOString().split('T')[0]!;
+
+  // Get current period in its current state
+  const currentPeriod = await getCurrentPeriod(todayISO)
+
+  // Get the month of the current period (1st, 2nd or 3rd).
+  const currentMonthOfPeriod = calculateMonthOfQuarter(date)
+
+  // Get the health column name that matches the current month of the period
+  const health_column_name = `health_${currentMonthOfPeriod}` as keyof IPeriod
+
+  await setPeriodHealth(MAX_INCIDENTS, health_column_name, currentPeriod!.id)
+
+
+}

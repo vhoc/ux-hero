@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import { calculateMonthOfQuarter } from "@/utils/misc";
 import { getCurrentPeriod } from "@/app/actions/periods";
 import { setPeriodHealth } from "@/app/actions/health";
+import { addCriticalError } from "@/app/actions/critical_errors";
 import {
   type IPeriod,
   type IIncident,
@@ -14,6 +15,7 @@ import {
 export const addIncident = async (date: Date, description: string) => {
   const todayISO = date.toISOString().split('T')[0]!;
   const INCIDENT_DAMAGE = Number(process.env.INCIDENT_DAMAGE)
+  const MAX_INCIDENTS = Number(process.env.MAX_INCIDENTS)
 
   // Get current period in its current state
   const currentPeriod = await getCurrentPeriod(todayISO)
@@ -39,6 +41,12 @@ export const addIncident = async (date: Date, description: string) => {
         await setPeriodHealth(0, health_column_name, currentPeriod.id)
       } else {
         await setPeriodHealth(newHealth, health_column_name, currentPeriod.id)
+      }
+
+      // If currentHealth is 1, add a Critial Error.
+      if (currentHealth === 1) {
+        await addCriticalError("Accumulation of incidents. No hearts left.", date) // Losing all health due to accumulation of incidents equals one critical error.
+        await setPeriodHealth(MAX_INCIDENTS, health_column_name, currentPeriod.id) // Restore health.
       }
 
     }

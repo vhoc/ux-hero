@@ -4,9 +4,10 @@ import ResetCounterButton from "./ResetCounterbutton/ResetCounterButton"
 interface MainCounterProps {
   days: number
   userData?: User | null
+  today: Date
 }
 
-const MainCounter = ({ days = 0, userData }:MainCounterProps) => {
+const MainCounter = ({ days = 0, userData, today }:MainCounterProps) => {
 
   return (
     <div className="flex flex-col gap-[13px] justify-center items-center w-full xl:h-full px-4">
@@ -44,7 +45,7 @@ const MainCounter = ({ days = 0, userData }:MainCounterProps) => {
       {
         userData ?
           <div className="flex flex-col">
-            <ResetCounterButton />
+            <ResetCounterButton today={today} />
           </div>
         :
           null

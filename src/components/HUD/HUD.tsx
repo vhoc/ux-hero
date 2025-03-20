@@ -1,36 +1,29 @@
+"use client"
 import PlayerStatus from "./PlayerStatus"
 import clsx from "clsx"
-import { type IPeriod, type IAward, type IIncident, type ISingleMonthPeriod } from "types"
+import { type IPeriod, type IAward, type IIncident, type ISingleMonthPeriod, type TAwardId } from "types"
 import Period from "./Period"
 import styles from "./HUD.module.css"
 import AwardStars from "../AwardStars/AwardStars"
 import Hearts from "./Hearts/Hearts"
 import { type User } from "@supabase/supabase-js"
-import { calculateMonthOfQuarter } from "@/utils/misc"
 
 interface HUDProps {
   today: Date
   player_name?: string
   daysSinceLastCriticalError: number
-  period: IPeriod
+  initialCurrentPeriod: IPeriod
   currentMonthPeriod: ISingleMonthPeriod
   className?: string
   awards: IAward[]
   incidents?: IIncident[]
   userData?: User | null
+  period: IPeriod
+  currentHealth: number
+  achieved_awards: Array<TAwardId | null>
 }
 
-const HUD = ({ today, player_name = "Unknown", daysSinceLastCriticalError = 0, period, currentMonthPeriod, className, awards, userData }: HUDProps) => {
-
-  // Select the health value from the period that matches the month of today's date.
-  const monthOfQuarter = calculateMonthOfQuarter(today)
-  const healthKey = `health_${monthOfQuarter}` as keyof IPeriod
-  const currentHealth = Number(period[healthKey])
-  const achieved_awards = [
-    period.achieved_1 ?? null,
-    period.achieved_2 ?? null,
-    period.achieved_3 ?? null,
-  ]
+const HUD = ({ today, player_name = "Unknown", daysSinceLastCriticalError = 0, initialCurrentPeriod, currentMonthPeriod, className, awards, userData, period, currentHealth, achieved_awards }: HUDProps) => {
 
   return (
     <div className={styles.slideIn}>

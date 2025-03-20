@@ -38,8 +38,8 @@ export const getCriticalErrors = async (period: IPeriod): Promise<ICriticalError
 
 }
 
-export const addCriticalError = async (description: string) => {
-  const today = new Date();
+export const addCriticalError = async (description: string, today: Date) => {
+  // const today = new Date();
   const todayISO = today.toISOString().split('T')[0];
 
   try {

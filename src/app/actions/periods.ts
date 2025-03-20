@@ -1,7 +1,8 @@
 "use server"
 import { type PostgrestError } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/server";
-import { calculateMonthOfQuarter } from "@/utils/misc";
+import { getCriticalErrors } from "./critical_errors";
+import { getDaysSinceLastCriticalError } from "@/utils/time-calculations";
 import {
   type IPeriod,
   type ISingleMonthPeriod,
@@ -68,6 +69,8 @@ export const getCurrentMonthPeriod = async (now: Date): Promise<ISingleMonthPeri
   // const now = new Date();
   const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
   const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const thisMonthNumber = now.getMonth() + 1
+  // console.log('now.getMonth(): ', now.getMonth() + 1)
 
   const formatDate = (date: Date): string => {
     const day = date.getDate().toString().padStart(2, '0');
@@ -77,7 +80,11 @@ export const getCurrentMonthPeriod = async (now: Date): Promise<ISingleMonthPeri
   };
 
   return {
-    id: 0,
+    // Set the number of the month relative to the current period/quarter as the result id
+    id: thisMonthNumber === 1 || thisMonthNumber === 4 || thisMonthNumber === 7 || thisMonthNumber === 10 ? 1 :
+      thisMonthNumber === 2 || thisMonthNumber === 5 || thisMonthNumber === 8 || thisMonthNumber === 11 ? 2 :
+        thisMonthNumber === 3 || thisMonthNumber === 6 || thisMonthNumber === 9 || thisMonthNumber === 12 ? 3 : 0
+    ,
     name: "Current month",
     start_date: formatDate(startDate),
     end_date: formatDate(endDate)
@@ -95,45 +102,59 @@ export const getElapsedDaysOfPeriod = async (start_date: string) => {
 
 }
 
-export const setPeriodAward = async (date: Date, period_id: number, daysSinceLastCriticalError: number): Promise<void> => {
+export const setPeriodAward = async (date: Date, period_id: number, monthOfQuarter: number): Promise<void> => {
 
-  console.log('setPeriodAward props')
-  console.log(JSON.stringify({ date, period_id, daysSinceLastCriticalError }, null, 2))
+  // console.log('setPeriodAward props')
+  // console.log(JSON.stringify({ date, period_id, monthOfQuarter }, null, 2))
 
-  // 1. Check if the current month is the first, second or third month of the quarter
-  const pastMonthOfQuarter = calculateMonthOfQuarter(date) - 1
-  const columnToUpdate = `achieved_${pastMonthOfQuarter}` as keyof IPeriod
-  const awardId = daysSinceLastCriticalError >= 30 && daysSinceLastCriticalError < 60 ? 1 :
-    daysSinceLastCriticalError >= 60 && daysSinceLastCriticalError < 90 ? 2 :
-    daysSinceLastCriticalError >= 90 ? 3 : null
+  const todayISO: string = date.toISOString().split('T')[0]!;
+  const currentPeriod = await getCurrentPeriod(todayISO)
+  const criticalErrors = await getCriticalErrors(currentPeriod!)
+  const daysSinceLastCriticalError = getDaysSinceLastCriticalError(criticalErrors!, currentPeriod!.start_date, date)
 
-  console.log('setPeriodAward values')
-  console.log(JSON.stringify({ pastMonthOfQuarter, columnToUpdate, awardId }, null, 2))
+  if (daysSinceLastCriticalError !== null) {
 
-  // 2. Check if the 'achieved_x' column is null, if it is, update it to which award id?
-  try {
-    const supabase = await createClient();
-    const { data, error }: { data: IPeriod[] | null, error: PostgrestError | null } = await supabase
-      .from('periods')
-      .select('*')
-      .eq('id', period_id)
-      .single();
+    console.log('setPeriodAward/daysSinceLastCriticalError: ', daysSinceLastCriticalError)
 
-    if (error) {
-      console.error('Error fetching periods: ', error)
+    // 1. Check if the current month is the first, second or third month of the quarter
+    const pastMonthOfQuarter = monthOfQuarter - 1
+    const columnToUpdate = `achieved_${monthOfQuarter}` as keyof IPeriod
+    
+    const awardId = daysSinceLastCriticalError >= 30 && daysSinceLastCriticalError < 60 ? 1 :
+      daysSinceLastCriticalError >= 60 && daysSinceLastCriticalError < 90 ? 2 :
+        daysSinceLastCriticalError >= 90 ? 3 : null
+    
+    console.log('setPeriodAward/awardId: ', awardId)
+
+    // console.log('setPeriodAward values')
+    // console.log(JSON.stringify({ monthOfQuarter, columnToUpdate, awardId }, null, 2))
+
+    // 2. Check if the 'achieved_x' column is null, if it is, update it to which award id?
+    try {
+      const supabase = await createClient();
+      const { data, error }: { data: IPeriod[] | null, error: PostgrestError | null } = await supabase
+        .from('periods')
+        .select('*')
+        .eq('id', period_id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching periods: ', error)
+      }
+
+      if (data) {
+        console.log('data[columnToUpdate as keyof typeof data]: ', data[columnToUpdate as keyof typeof data])
+        // Check if the 'achieved_x' column is null, if it is, update it to which award id?
+        // if (data[columnToUpdate as keyof typeof data] === null && awardId && awardId > 0) {      
+        await updateMonthAchievedAward(period_id, pastMonthOfQuarter, awardId)
+
+      } else {
+        console.log('No periods found')
+      }
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
     }
 
-    if (data) {
-      console.log('data[columnToUpdate as keyof typeof data]: ', data[columnToUpdate as keyof typeof data])
-      // Check if the 'achieved_x' column is null, if it is, update it to which award id?
-      // if (data[columnToUpdate as keyof typeof data] === null && awardId && awardId > 0) {      
-       await updateMonthAchievedAward(period_id, pastMonthOfQuarter, awardId)
-      
-    } else {
-      console.log('No periods found')
-    }
-  } catch (error) {
-    console.error('An unexpected error occurred:', error);
   }
 
 }

@@ -1,11 +1,13 @@
+"use client"
+
 import imgBlankStar from "../../../public/img/stars/blank-star.png"
 import Image from "next/image"
-import { type IAward, type IPeriod } from "types"
+import { type IAward, type TAwardId } from "types"
 import styles from "./AwardStars.module.css"
 
 interface AwardStarsProps {
   awards: IAward[]
-  achieved_awards: Array<number | null>
+  achieved_awards: Array<TAwardId | null>
 }
 
 const awardsArrayToMap = (awards: IAward[]): Map<number, IAward> =>  {
@@ -15,11 +17,12 @@ const awardsArrayToMap = (awards: IAward[]): Map<number, IAward> =>  {
   }, new Map(awards.sort((a, b) => a.days_required - b.days_required).map(award => [award.id, award])));
 }
 
-const AwardStars = ({ awards, achieved_awards = [0, 0, 0,] }:AwardStarsProps) => {
+const AwardStars = ({ awards, achieved_awards = [null, null, null,] }:AwardStarsProps) => {
+
 
   // Convert awards array to Map to ensure the proper order by the days_required property (ascending)
   const awardsMap = awardsArrayToMap(awards)
-  // console.log('achieved_awards: ', achieved_awards)
+  console.log('achieved_awards: ', achieved_awards)
 
   return (
     <div className={styles.fadeIn}>
@@ -39,7 +42,6 @@ const AwardStars = ({ awards, achieved_awards = [0, 0, 0,] }:AwardStarsProps) =>
         />
 
         <Image
-          // src={ daysSinceLastCriticalError >= awardsMap.get(2)!.days_required ? awardsMap.get(2)!.icon_small! : imgBlankStar }
           src={ achieved_awards[1]! > 0 ? awardsMap.get(achieved_awards[1]!)!.icon_small! : imgBlankStar }
           width={45}
           height={42}

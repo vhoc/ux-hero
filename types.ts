@@ -54,3 +54,5 @@ export interface IHeartsRestored {
   month: number
   hearts_restored: boolean
 }
+
+export type TAwardId = 1 | 2 | 3

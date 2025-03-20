@@ -6,11 +6,10 @@ import PageContent from "@/components/PageContent";
 import { getAwards } from "@/app/actions/awards";
 import { getIncidents } from "@/app/actions/incidents";
 import { checkIfHearsWereRestored } from "@/app/actions/health";
-import { getCurrentPeriod, getCurrentMonthPeriod, getAllPeriods, setPeriodAward } from "@/app/actions/periods";
+import { getCurrentPeriod, getCurrentMonthPeriod, getAllPeriods,  } from "@/app/actions/periods";
 import { getCriticalErrors } from "@/app/actions/critical_errors";
 import { createClient } from "@/utils/supabase/server";
 import { Toaster } from "@/components/ui/sonner";
-import { getDaysSinceLastCriticalError } from "@/utils/time-calculations";
 
 // For the checkIfHearsWereRestored function
 export const dynamic = 'force-dynamic';
@@ -43,7 +42,7 @@ export default async function HomePage() {
   const criticalErrors = await getCriticalErrors( currentPeriod! )
 
   // Calculate the days since the last critical error in the current period
-  const daysSinceLastCriticalError = getDaysSinceLastCriticalError(criticalErrors!, currentPeriod!.start_date, today)
+  // const daysSinceLastCriticalError = getDaysSinceLastCriticalError(criticalErrors!, currentPeriod!.start_date, today)
 
   // Minor issues
   const incidents = await getIncidents( currentMonthPeriod ) ?? []
@@ -52,8 +51,10 @@ export default async function HomePage() {
   await checkIfHearsWereRestored(today)
 
   // Set the achieved awards (only once per month)
-  await setPeriodAward(today, currentPeriod!.id, daysSinceLastCriticalError!)
-
+  // console.log('currentMonthPeriod', currentMonthPeriod)
+  // if (currentMonthPeriod.id > 1) {
+  //   await setPeriodAward(today, currentPeriod!.id, currentMonthPeriod.id)
+  // }
 
   if (!currentPeriod || !awards || !criticalErrors ) return null
 

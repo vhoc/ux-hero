@@ -101,3 +101,14 @@ export const calculateCurrentPeriod = (today: Date, periods: IPeriod[]): IPeriod
 
   return currentPeriod ?? null
 }
+
+/**
+ * Returns the type of the bonus earned based on the current health
+ *  
+ * @param currentHealth 
+ * @returns 
+ */
+export const calculateBonusStatus = (currentHealth: number) => {
+  // If currentHealth is between 1 and 4, return "half", if currentHealth is equal or greater than 5, return "full", otherwise return "lost"
+  return currentHealth >= 5 ? "full" : currentHealth >= 1 && currentHealth < 5 ? "half" : "lost"
+}
