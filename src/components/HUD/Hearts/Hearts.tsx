@@ -2,7 +2,7 @@ import imgHeartFull from "@/../public/img/hearts/heart-full.png"
 import imgHeartHalf from "@/../public/img/hearts/heart-half.png"
 import imgHeartEmpty from "@/../public/img/hearts/heart-empty.png"
 import Image from "next/image"
-import { type IPeriod, type IMinorIssue } from "types"
+import { type ISingleMonthPeriod } from "types"
 import styles from './Hearts.module.css';
 import { type User } from "@supabase/supabase-js"
 import {
@@ -11,33 +11,45 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import AddMinorIssueButton from "@/components/AddMinorIssueButton/AddMinorIssueButton"
-// import { getCurrentMonthPeriod } from "@/app/actions"
+import AddIncidentButton from "@/components/AddIncidentButton/AddIncidentButton"
 
 interface HeartsProps {
-  minor_issues?: IMinorIssue[]
+  health: number
+  today: Date
   userData?: User | null
-  currentMonthPeriod: IPeriod
+  currentMonthPeriod: ISingleMonthPeriod
 }
 
 // Maximum amount of minor issues accumulated in the current period before adding a critical error and resetting the counter.
-const MAX_MINOR_ISSUES = Number(process.env.MAX_MINOR_ISSUES)
+const MAX_INCIDENTS = Number(process.env.MAX_INCIDENTS)
 
-const Hearts = ({ minor_issues = [], userData, currentMonthPeriod }: HeartsProps) => {
+// The total number of hearts to display
+const NUMBER_OF_HEARTS = MAX_INCIDENTS / 2; // = 4
+
+const Hearts = ({ health = 0, today, userData, currentMonthPeriod }: HeartsProps) => {
 
   const period = currentMonthPeriod
 
-  const numberOfIssues = minor_issues.length;
-  const numberOfHearts = Number(MAX_MINOR_ISSUES / 2);
+  // const numberOfIncidents = incidents.length;
+  // const numberOfIncidents = Number(MAX_INCIDENTS - (health + 1))
+  // console.log('numberOfIncidents: ', numberOfIncidents)
+  
+  // const numberOfHearts = Number(MAX_INCIDENTS / 2);
 
-  const remainingHearts = Math.max(0, numberOfHearts - numberOfIssues / 2);
+  // const remainingHearts = Math.max(0, numberOfHearts - numberOfIncidents / 2);
 
-  const fullHearts = Math.floor(remainingHearts);
-  const hasHalfHeart = remainingHearts % 1 !== 0;
-  const emptyHearts = numberOfHearts - fullHearts - (hasHalfHeart ? 1 : 0);
+  const fullHearts = Math.floor(health / 2);
+  // const hasHalfHeart = remainingHearts % 1 !== 0;
+  const hasHalfHeart = health % 2 !== 0; // Check for a remainder (1 for odd numbers)
+  // const emptyHearts = numberOfHearts - fullHearts - (hasHalfHeart ? 1 : 0);
+  const emptyHearts = NUMBER_OF_HEARTS - fullHearts - (hasHalfHeart ? 1 : 0);
 
+  // const lastFullHeartBeats = fullHearts > 0 && !hasHalfHeart;
   const lastFullHeartBeats = fullHearts > 0 && !hasHalfHeart;
+  // const halfHeartBeats = hasHalfHeart;
   const halfHeartBeats = hasHalfHeart;
+
+  
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -110,12 +122,12 @@ const Hearts = ({ minor_issues = [], userData, currentMonthPeriod }: HeartsProps
         </TooltipProvider>
 
         {
-          userData && numberOfIssues < MAX_MINOR_ISSUES ?
+          userData && health >= 1 ?
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div>
-                    <AddMinorIssueButton period={period} />
+                    <AddIncidentButton today={today} period={period} />
                   </div>
                 </TooltipTrigger>
 

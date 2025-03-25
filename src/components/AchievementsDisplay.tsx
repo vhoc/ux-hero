@@ -1,47 +1,69 @@
 import AchievementCard from "./AchievementCard/AchievementCard"
-import { type IAwardsCheckList, type IAward, type IMinorIssue } from "types"
+import { type IAwardsCheckList, type IAward, type IIncident } from "types"
 
 interface AchievementsDisplayProps {
   awards: IAward[]
   daysSinceLastCriticalError: number
-  minorIssues: IMinorIssue[]
+  minorIssues: IIncident[]
+  currentHealth: number
+  today: Date
+  period_end_date: string
 }
 
-const getAwardsCheckList = (daysWithoutCriticalError: number, awards: IAward[]): IAwardsCheckList | null => {
+const getAwardsCheckList = (daysWithoutCriticalError: number, awards: IAward[], today: Date, period_end_date: string): IAwardsCheckList | null => {
 
+  if (!awards || awards.length === 0) {
+    return null;
+  }
 
-  if ( awards && awards.length >= 1 ) {
+  // Calculate remaining days in the period (assuming period ends March 31st)
+  const currentDate = new Date(today); // Use current date as a parameter if needed
+  const endOfPeriod = new Date(period_end_date); // March is month 2 (zero-based)
 
-    let now_playing: IAward = awards[0]!
-    const next: Array<IAward | null> = []
-  
-    if ( awards.length > 0 && daysWithoutCriticalError < awards[0]!.days_required ) {
-      now_playing = awards[0]!
-      next.push(...awards.slice(1))
-    } else if ( awards.length > 1 && daysWithoutCriticalError >= awards[0]!.days_required && daysWithoutCriticalError < awards[1]!.days_required ) {
-      now_playing = awards[1]!
-      next.push(...awards.slice(2))
-    } else if ( awards.length > 2 && daysWithoutCriticalError >= awards[1]!.days_required) {
-      now_playing = awards[2]!
-    } else {
-      now_playing = awards[awards.length - 1]!
-    }
+  // console.log("endOfPeriod", endOfPeriod)
+  const remainingDays = Math.ceil((endOfPeriod.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
 
-    return {
-      now_playing: now_playing,
-      next: next,
+  let now_playing: IAward | null = null;
+  const next: Array<IAward | null> = [];
+
+  let foundNowPlaying = false;
+
+  for (const award of awards) {
+    // console.log("daysWithoutCriticalError: ", daysWithoutCriticalError)
+    // console.log("award.days_required: ", award.days_required)
+    // console.log("remainingDays: ", remainingDays)
+    // console.log("(daysWithoutCriticalError + remainingDays): ", (daysWithoutCriticalError + remainingDays))
+    // Check if the award is obtainable within the remaining days AND if daysWithoutCriticalError is enough
+    if (daysWithoutCriticalError < award.days_required && award.days_required <= (daysWithoutCriticalError + remainingDays)) {      
+      if (!foundNowPlaying) {
+        now_playing = award;
+        foundNowPlaying = true;
+      } else {
+        next.push(award);
+      }
     }
   }
 
-  return null
+  if (!foundNowPlaying) {
+    now_playing = null;
+  }
 
+  return {
+    now_playing: now_playing,
+    next: next,
+  };
 }
 
-const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, minorIssues = [] }: AchievementsDisplayProps) => {
+
+
+const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, minorIssues = [], currentHealth, today, period_end_date }: AchievementsDisplayProps) => {
 
   // Select the award that is currently playing:
-  const awardsList = getAwardsCheckList(daysSinceLastCriticalError, awards)
-  const MAX_MINOR_ISSUES = Number(process.env.MAX_MINOR_ISSUES)
+  const awardsList = getAwardsCheckList(daysSinceLastCriticalError, awards, today, period_end_date)
+  // console.log('awardsList: ', awardsList)
+  // const MAX_MINOR_ISSUES = Number(process.env.MAX_MINOR_ISSUES)
+
+  
 
   if (awardsList) {
     return (
@@ -56,11 +78,14 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, mino
           {
             awardsList.now_playing ?
               <AchievementCard
-                daysSinceLastCriticalError={daysSinceLastCriticalError}
                 award={awardsList.now_playing}
                 state="unlocked"
                 name={awardsList.now_playing.name}
-                lost={ minorIssues && minorIssues.length >= MAX_MINOR_ISSUES }
+                currentHealth={currentHealth}
+                isNowPlaying={true}
+                daysSinceLastCriticalError={daysSinceLastCriticalError}
+                // bonus_status={ minorIssues && minorIssues.length >= MAX_MINOR_ISSUES ? "lost" : "full" }
+                // lost={ minorIssues && minorIssues.length >= MAX_MINOR_ISSUES }
               />
               :
               null
@@ -83,10 +108,11 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, mino
                     return (
                       <AchievementCard
                         key={`next-award-${index}_${award.id}`}
-                        daysSinceLastCriticalError={daysSinceLastCriticalError}
                         award={awardsList.next[index]!}
                         state={ awardsList.next.length - 1 === index ? "locked" : "upcoming" }
                         name={award.name}
+                        currentHealth={currentHealth}
+                        daysSinceLastCriticalError={daysSinceLastCriticalError}
                       />
                     )
                   }

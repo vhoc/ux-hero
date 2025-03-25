@@ -4,18 +4,34 @@ export interface IAward {
   days_required: number
   name: string
   description: string
+  value: number
   icon?: string
-  icon_small?: string
+  icon_warning?: string
 }
 
 export interface IAwardsCheckList {
-  now_playing: IAward,
+  now_playing: IAward | null,
   next: Array<IAward | null>
 }
 
 export interface IPeriod {
   id: number
   created_at: string
+  name: string
+  start_date: string
+  end_date: string
+  health_1: number
+  health_2: number
+  health_3: number
+  achieved_1: number
+  achieved_2: number
+  achieved_3: number
+  earned_amount: number
+  days_without_criticals: number
+}
+
+export interface ISingleMonthPeriod {
+  id: number
   name: string
   start_date: string
   end_date: string
@@ -28,41 +44,17 @@ export interface ICriticalError {
   date: string
 }
 
-export interface IMinorIssue {
+export interface IIncident {
   id: number
   created_at: string
   descripption?: string
   date: string
 }
 
-const awards = [
-  {
-    id: 1,
-    created_at: "",
-    days_required: 18,
-    name: "First award",
-    description: "You've achieved your first award!",
-    icon: "",
-    icon_small: "",
-  },
-  {
-    id: 2,
-    created_at: "",
-    days_required: 48,
-    name: "Second award",
-    description: "You've achieved your second award!",
-    icon: "",
-    icon_small: "",
-  },
-  {
-    id: 3,
-    created_at: "",
-    days_required: 72,
-    name: "Third award",
-    description: "You've achieved your third award!",
-    icon: "",
-    icon_small: "",
-  }
-]
+export interface IHeartsRestored {
+  id: number
+  month: number
+  hearts_restored: boolean
+}
 
-// export type TPeriod = PostgrestSingleResponse<Period> | null
+export type TAwardId = 1 | 2 | 3

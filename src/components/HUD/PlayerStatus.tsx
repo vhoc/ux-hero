@@ -3,11 +3,14 @@ import clsx from "clsx"
 
 interface PlayerStatusProps {
   player_name?: string
-  coins: number
   className?: string
+  earned_amount: number
 }
 
-const PlayerStatus = ({ player_name = "Unknown", coins = 0, className }: PlayerStatusProps) => {
+const PlayerStatus = ({ player_name = "Unknown", className, earned_amount = 0 }: PlayerStatusProps) => {
+
+  // const awardPot = calculateAwardPot(daysSinceLastCriticalError, awards, period)
+  
   return (
     <div className={clsx(
       "flex flex-col justify-end gap-x-4 min-w-60 max-w-[365px]",
@@ -20,7 +23,7 @@ const PlayerStatus = ({ player_name = "Unknown", coins = 0, className }: PlayerS
 
       <div className="flex justify-between gap-x-4">
         <span className="text-xl md:text-2xl">{player_name}</span>
-        <CoinCounter coins={coins} />
+        <CoinCounter coins={earned_amount} />
       </div>
 
     </div>

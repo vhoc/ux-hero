@@ -1,12 +1,11 @@
 import clsx from "clsx"
-import { type IPeriod } from "types"
 
 interface PeriodProps {
-  period: IPeriod
+  period_name: string
   className?: string
 }
 
-const Period = ({ period, className }: PeriodProps) => {
+const Period = ({ period_name, className }: PeriodProps) => {
 
   return (
     <div className={clsx(
@@ -19,7 +18,7 @@ const Period = ({ period, className }: PeriodProps) => {
       </div>
 
       <div className="flex justify-between">
-        <span className="text-xl md:text-2xl uppercase">{period.name ?? "No period"}</span>
+        <span className="text-xl md:text-2xl uppercase">{period_name ?? "No period"}</span>
       </div>
 
     </div>

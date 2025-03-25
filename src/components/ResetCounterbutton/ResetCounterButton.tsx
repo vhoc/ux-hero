@@ -12,19 +12,24 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog"
 import { useState } from "react"
-import { addCriticalError } from "@/app/actions"
+import { addCriticalError } from "@/app/actions/critical_errors"
 import { toast } from "sonner"
 import Image from "next/image"
 import imgSkull from "@/../public/img/skull.png"
+import { restoreHealth } from "@/app/actions/health"
 
-const ResetCounterButton = () => {
+interface ResetCounterButtonProps {
+  today: Date
+}
+
+const ResetCounterButton = ({today}:ResetCounterButtonProps) => {
 
   const [description, setDescription] = useState("")
   const [loading, setLoading] = useState(false)
 
   const handleResetCounter = () => {
     setLoading(true)
-    addCriticalError(description)
+    addCriticalError(description, today)
       .then((data) => {
         if (data && 'message' in data) {
           toast.error("Error adding new critical error", {
@@ -34,6 +39,8 @@ const ResetCounterButton = () => {
 
         if (Array.isArray(data) && data.length >= 1) {
           setDescription("")
+          // Restore health
+          void restoreHealth(today)
           toast.success("Contador reseteado", {
             description: <span className="text-green-700">Se ha añadido el error crítico y se ha reseteado el contador a cero.</span>,
           })
