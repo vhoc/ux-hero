@@ -7,15 +7,16 @@ import { useState, useEffect } from "react";
 import styles from "./AchievementCard.module.css";
 
 interface AchievementCardProps {
-  daysSinceLastCriticalError: number;
   award: IAward;
   name: string
   state: "locked" | "upcoming" | "unlocked"
   currentHealth: number
+  isNowPlaying?: boolean
+  daysSinceLastCriticalError: number
   // lost?: boolean
 }
 
-const AchievementCard = ({ daysSinceLastCriticalError = 0, award, name, state = "unlocked", currentHealth }: AchievementCardProps) => {
+const AchievementCard = ({ award, name, state = "unlocked", currentHealth, isNowPlaying = false, daysSinceLastCriticalError }: AchievementCardProps) => {
 
   const MAX_INCIDENTS = Number(process.env.MAX_INCIDENTS)
   const bonus_status = calculateBonusStatus(currentHealth)
@@ -63,7 +64,7 @@ const AchievementCard = ({ daysSinceLastCriticalError = 0, award, name, state = 
           ${ state === "locked" ? "opacity-40 scale-75 origin-top-right grayscale" : "" }
         `)}
         style={{
-          boxShadow: `10px 10px 0px ${ state === "unlocked" ? "#6ddaa1" : "#000000" }`,
+          boxShadow: `10px 10px 0px ${ state === "unlocked" ? "#6ddaa1" :  "#000000" }`,
         }}
       >
         <div
@@ -74,13 +75,12 @@ const AchievementCard = ({ daysSinceLastCriticalError = 0, award, name, state = 
             "w-[74px] min-w-[74px] h-[70px] relative"
             )}>
           <Image
-            src={ award.icon! }
+            src={ (isNowPlaying && halfBonusWarning || noBonusWarning) ? award.icon_warning! : award.icon! }
             alt="Reward star"
             fill
             style={{
               objectFit: "contain",
               objectPosition: "center",
-              filter: halfBonusWarning || noBonusWarning ? "hue-rotate(200deg) brightness(0.8)" : "none"
             }}
             className={ bonusStatus === "lost" ? "grayscale" : ""}
           />
@@ -89,13 +89,13 @@ const AchievementCard = ({ daysSinceLastCriticalError = 0, award, name, state = 
         <div className="flex flex-col">
           <span className={clsx("capitalize text-xs md:text-lg text-black", bonusStatus === "lost" ? "text-gray-500" : "")}>
             {
-              noBonusWarning ?
+              isNowPlaying && noBonusWarning ?
                 `LAST CHANCE!`
               :
-                halfBonusWarning ?// Risk warning for half award
+              isNowPlaying &&halfBonusWarning ?// Risk warning for half award
                   `FULL REWARD AT RISK!`
                 :
-                  bonusStatus === "half" ?
+                 isNowPlaying &&bonusStatus === "half" ?
                     `Keep going!`
                   :
                     `${ name }!`
@@ -109,9 +109,9 @@ const AchievementCard = ({ daysSinceLastCriticalError = 0, award, name, state = 
               `This award is no longer available for this month due to the accumulation of ${MAX_INCIDENTS} minor issues.`
               :
               // `${award.days_required - daysSinceLastCriticalError} days to achieve ${award.description}!`
-                noBonusWarning ? `You have half a heart left to keep the $${award.value / 2 } reward!` :
-                  halfBonusWarning ? `Reward currently valued in $${award.value} until next incident!` :
-                `Reward currently valued in $${bonusStatus === "half" ? award.value / 2 : award.value}!`
+                isNowPlaying && noBonusWarning ? `You have half a heart left to keep the $${award.value / 2 } reward!` :
+                  isNowPlaying && halfBonusWarning ? `Reward currently valued in $${award.value} until next incident!` :
+                `${!isNowPlaying ? `${award.days_required - daysSinceLastCriticalError} days to go.` : ''} Reward currently valued in $${bonusStatus === "half" ? award.value / 2 : award.value}!`
             }
           </p>
         </div>

@@ -11,19 +11,18 @@ import { type User } from "@supabase/supabase-js"
 interface HUDProps {
   today: Date
   player_name?: string
-  daysSinceLastCriticalError: number
-  initialCurrentPeriod: IPeriod
   currentMonthPeriod: ISingleMonthPeriod
   className?: string
   awards: IAward[]
   incidents?: IIncident[]
   userData?: User | null
-  period: IPeriod
+  period_name: string
   currentHealth: number
   achieved_awards: Array<TAwardId | null>
+  earned_amount: number
 }
 
-const HUD = ({ today, player_name = "Unknown", daysSinceLastCriticalError = 0, initialCurrentPeriod, currentMonthPeriod, className, awards, userData, period, currentHealth, achieved_awards }: HUDProps) => {
+const HUD = ({ today, player_name = "Unknown", currentMonthPeriod, className, awards, userData, period_name, currentHealth, achieved_awards, earned_amount }: HUDProps) => {
 
   return (
     <div className={styles.slideIn}>
@@ -38,13 +37,11 @@ const HUD = ({ today, player_name = "Unknown", daysSinceLastCriticalError = 0, i
         <div className="flex gap-x-[70px] gap-y-4 flex-col md:flex-row">
           <PlayerStatus
             player_name={player_name}
-            daysSinceLastCriticalError={daysSinceLastCriticalError}
             className="flex-1"
-            awards={awards}
-            period={period}
+            earned_amount={earned_amount}
           />
 
-          <Period period={period} className="flex-1" />
+          <Period period_name={period_name} className="flex-1" />
         </div>
 
         <div className="flex gap-x-[70px] gap-y-8 flex-col-reverse lg:flex-row flex-wrap justify-end">

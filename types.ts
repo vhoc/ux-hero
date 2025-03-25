@@ -6,11 +6,11 @@ export interface IAward {
   description: string
   value: number
   icon?: string
-  icon_small?: string
+  icon_warning?: string
 }
 
 export interface IAwardsCheckList {
-  now_playing: IAward,
+  now_playing: IAward | null,
   next: Array<IAward | null>
 }
 
@@ -26,6 +26,8 @@ export interface IPeriod {
   achieved_1: number
   achieved_2: number
   achieved_3: number
+  earned_amount: number
+  days_without_criticals: number
 }
 
 export interface ISingleMonthPeriod {

@@ -1,19 +1,15 @@
-import { type IAward, type IPeriod } from "types"
 import CoinCounter from "./CoinCounter/CoinCounter"
 import clsx from "clsx"
-import { calculateAwardPot } from "@/utils/misc"
 
 interface PlayerStatusProps {
   player_name?: string
-  daysSinceLastCriticalError: number
   className?: string
-  awards: IAward[]
-  period: IPeriod
+  earned_amount: number
 }
 
-const PlayerStatus = ({ player_name = "Unknown", daysSinceLastCriticalError = 0, className, awards = [], period }: PlayerStatusProps) => {
+const PlayerStatus = ({ player_name = "Unknown", className, earned_amount = 0 }: PlayerStatusProps) => {
 
-  const awardPot = calculateAwardPot(daysSinceLastCriticalError, awards, period)
+  // const awardPot = calculateAwardPot(daysSinceLastCriticalError, awards, period)
   
   return (
     <div className={clsx(
@@ -27,7 +23,7 @@ const PlayerStatus = ({ player_name = "Unknown", daysSinceLastCriticalError = 0,
 
       <div className="flex justify-between gap-x-4">
         <span className="text-xl md:text-2xl">{player_name}</span>
-        <CoinCounter coins={awardPot} />
+        <CoinCounter coins={earned_amount} />
       </div>
 
     </div>

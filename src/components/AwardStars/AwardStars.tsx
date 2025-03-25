@@ -22,7 +22,6 @@ const AwardStars = ({ awards, achieved_awards = [null, null, null,] }:AwardStars
 
   // Convert awards array to Map to ensure the proper order by the days_required property (ascending)
   const awardsMap = awardsArrayToMap(awards)
-  console.log('achieved_awards: ', achieved_awards)
 
   return (
     <div className={styles.fadeIn}>
@@ -35,21 +34,21 @@ const AwardStars = ({ awards, achieved_awards = [null, null, null,] }:AwardStars
       >
         
         <Image
-          src={ achieved_awards[0]! > 0 ? awardsMap.get(achieved_awards[0]!)!.icon_small! : imgBlankStar }
+          src={ achieved_awards[0]! > 0 ? awardsMap.get(achieved_awards[0]!)!.icon! : imgBlankStar }
           width={45}
           height={42}
           alt={awardsMap.get(1)!.name}
         />
 
         <Image
-          src={ achieved_awards[1]! > 0 ? awardsMap.get(achieved_awards[1]!)!.icon_small! : imgBlankStar }
+          src={ achieved_awards[1]! > 0 ? awardsMap.get(achieved_awards[1]!)!.icon! : imgBlankStar }
           width={45}
           height={42}
           alt={awardsMap.get(2)!.name}
         />
 
         <Image
-          src={ achieved_awards[2]! > 0 ? awardsMap.get(achieved_awards[2]!)!.icon_small! : imgBlankStar }
+          src={ achieved_awards[2]! > 0 ? awardsMap.get(achieved_awards[2]!)!.icon! : imgBlankStar }
           width={45}
           height={42}
           alt={awardsMap.get(3)!.name}

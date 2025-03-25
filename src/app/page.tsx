@@ -5,7 +5,7 @@ import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import PageContent from "@/components/PageContent";
 import { getAwards } from "@/app/actions/awards";
 import { getIncidents } from "@/app/actions/incidents";
-import { checkIfHearsWereRestored } from "@/app/actions/health";
+// import { checkIfHearsWereRestored } from "@/app/actions/health";
 import { getCurrentPeriod, getCurrentMonthPeriod, getAllPeriods,  } from "@/app/actions/periods";
 import { getCriticalErrors } from "@/app/actions/critical_errors";
 import { createClient } from "@/utils/supabase/server";
@@ -20,8 +20,8 @@ export default async function HomePage() {
   const { data: userData, error: userError } = await supabase.auth.getUser()
 
   // Get today's date
-  // const today = new Date();
-  const today = new Date('2025-02-01T18:51:14.775Z');
+  const today = new Date();
+  // const today = new Date('2025-01-29T18:51:14.775Z');
   const currentYear = Number(process.env.CURRENT_YEAR)
 
   const todayISO: string = today.toISOString().split('T')[0]!;
@@ -48,7 +48,7 @@ export default async function HomePage() {
   const incidents = await getIncidents( currentMonthPeriod ) ?? []
 
   // Hearts restoration check & event
-  await checkIfHearsWereRestored(today)
+  // await checkIfHearsWereRestored(today)
 
   // Set the achieved awards (only once per month)
   // console.log('currentMonthPeriod', currentMonthPeriod)
