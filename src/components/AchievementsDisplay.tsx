@@ -60,7 +60,7 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, mino
 
   // Select the award that is currently playing:
   const awardsList = getAwardsCheckList(daysSinceLastCriticalError, awards, today, period_end_date)
-  console.log('awardsList: ', awardsList)
+  // console.log('awardsList: ', awardsList)
   // const MAX_MINOR_ISSUES = Number(process.env.MAX_MINOR_ISSUES)
 
   
