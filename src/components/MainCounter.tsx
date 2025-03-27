@@ -5,9 +5,10 @@ interface MainCounterProps {
   days: number
   userData?: User | null
   today: Date
+  periodId: number
 }
 
-const MainCounter = ({ days = 0, userData, today }:MainCounterProps) => {
+const MainCounter = ({ days = 0, userData, today, periodId }:MainCounterProps) => {
 
   return (
     <div className="flex flex-col gap-[13px] justify-center items-center w-full xl:h-full px-4">
@@ -45,7 +46,7 @@ const MainCounter = ({ days = 0, userData, today }:MainCounterProps) => {
       {
         userData ?
           <div className="flex flex-col">
-            <ResetCounterButton today={today} />
+            <ResetCounterButton today={today} periodId={periodId} />
           </div>
         :
           null
