@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog"
 import { useState } from "react"
-import { addCriticalError } from "@/app/actions/critical_errors"
+import { addCriticalError, resetDaysWithoutCriticals } from "@/app/actions/critical_errors"
 import { toast } from "sonner"
 import Image from "next/image"
 import imgSkull from "@/../public/img/skull.png"
@@ -20,15 +20,24 @@ import { restoreHealth } from "@/app/actions/health"
 
 interface ResetCounterButtonProps {
   today: Date
+  periodId: number
 }
 
-const ResetCounterButton = ({today}:ResetCounterButtonProps) => {
+const ResetCounterButton = ({today, periodId}:ResetCounterButtonProps) => {
 
   const [description, setDescription] = useState("")
   const [loading, setLoading] = useState(false)
 
   const handleResetCounter = () => {
     setLoading(true)
+
+    void resetDaysWithoutCriticals(periodId)
+      .then((error) => {
+        if (error) {
+          console.error(error)
+        }
+      })
+    
     addCriticalError(description, today)
       .then((data) => {
         if (data && 'message' in data) {

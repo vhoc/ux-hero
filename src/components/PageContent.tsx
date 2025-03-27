@@ -256,7 +256,7 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
 
           <div className="flex flex-col gap-y-10 md:justify-center items-center w-full h-full xl:px-16 xl:flex-row xl:items-start">
 
-            <MainCounter days={period.days_without_criticals} userData={userData} today={today} />
+            <MainCounter days={period.days_without_criticals} userData={userData} today={today} periodId={period.id} />
 
             <AchievementsDisplay
               awards={awards}

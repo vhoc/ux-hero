@@ -57,6 +57,7 @@ export const addCriticalError = async (description: string, today: Date) => {
     }
 
     if (data) {
+      //
       return data
     } else {
       console.log('Error adding critical error')
@@ -99,4 +100,26 @@ export const getElapsedDaysSinceLastCriticalError = async (critical_errors: ICri
 
   return null
 
+}
+
+export const resetDaysWithoutCriticals = async (periodId: number): Promise<PostgrestError | void> => {
+  try {
+    const supabase = await createClient();
+    const { error }: { error: PostgrestError | null } = await supabase
+      .from('periods')
+      .update([
+        { days_without_criticals: 0 }
+      ])
+      .eq('id', periodId)
+      .select();
+
+    if (error) {
+      console.error('Error resetting days without criticals in database: ', error)
+      return error
+    } else {
+      console.log('Error resetting days without criticals in database')
+    }
+  } catch (error) {
+    console.error('An unexpected error occurred:', error);
+  }
 }
