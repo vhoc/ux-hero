@@ -47,7 +47,7 @@ export interface ICriticalError {
 export interface IIncident {
   id: number
   created_at: string
-  descripption?: string
+  description?: string
   date: string
 }
 
