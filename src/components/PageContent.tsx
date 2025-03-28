@@ -219,17 +219,6 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
     }
   }, [awards, period])
 
-  // Update the health meter when the period state changes
-  // useEffect(() => {
-  //   setCurrentHealth(Number(period[healthKey]))
-  // }, [period, healthKey])
-
-  // This should fix it
-  // useEffect(() => {
-  //   if (period && currentMonthPeriod.id > 1) {
-  //       void setPeriodAward(today, period.id, currentMonthPeriod.id)
-  //   }
-  // }, [today, period, currentMonthPeriod])
 
 
   if (initialCurrentPeriod && period && currentMonthPeriod && awards && awards.length >= 1) {
@@ -256,7 +245,13 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
 
           <div className="flex flex-col gap-y-10 md:justify-center items-center w-full h-full xl:px-16 xl:flex-row xl:items-start">
 
-            <MainCounter days={period.days_without_criticals} userData={userData} today={today} periodId={period.id} />
+            <MainCounter
+              days={period.days_without_criticals}
+              userData={userData}
+              today={today}
+              periodId={period.id}
+              incidents_amount={incidents.length}
+            />
 
             <AchievementsDisplay
               awards={awards}

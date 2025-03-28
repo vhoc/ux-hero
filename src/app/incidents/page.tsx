@@ -37,7 +37,7 @@ export default async function IncidentsPage() {
               <TableBody>
               {
                 incidents.map(( incident, index ) => (
-                  <TableRow key={`critical-error-${index}-${incident.id}`}>
+                  <TableRow key={`incident-${index}-${incident.id}`}>
                     <TableCell className="font-medium">{incident.id}</TableCell>
                     <TableCell>{incident.date}</TableCell>
                     <TableCell>{incident.description}</TableCell>
