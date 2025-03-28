@@ -46,8 +46,9 @@ export const getAllPeriods = async (year: number): Promise<IPeriod[] | null> => 
     const { data, error }: { data: IPeriod[] | null, error: PostgrestError | null } = await supabase
       .from('periods')
       .select('*')
-      .gte('start_date', `${year}-01-01`)
-      .lte('end_date', `${year}-12-31`);
+      .order('id')
+      // .gte('start_date', `${year}-01-01`)
+      // .lte('end_date', `${year}-12-31`);
 
     if (error) {
       console.error('Error fetching periods: ', error)
