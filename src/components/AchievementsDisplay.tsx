@@ -100,7 +100,7 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, mino
             <div
               className="flex flex-col gap-y-[13px] mt-[35px] items-end"
             >
-              <span className="text-white text-[13px] text-right">PLAY TU UNLOCK</span>
+              <span className="text-white text-[13px] text-right">PLAY TO UNLOCK</span>
               <div className="w-full mr-0">
               {
                 awardsList.next.map((award, index) => {
