@@ -49,7 +49,7 @@ export default async function CriticalErrorsPage() {
             </Table>
           </div>
           :
-          <div>
+          <div className="mt-10">
             No critical errors have been registered in the current period.
           </div>
       }

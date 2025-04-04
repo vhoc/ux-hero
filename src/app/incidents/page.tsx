@@ -49,8 +49,8 @@ export default async function IncidentsPage() {
             </Table>
           </div>
           :
-          <div>
-            No critical errors have been registered in the current period.
+          <div className="mt-10">
+            No incidents have been registered in the current period.
           </div>
       }
     </main>
