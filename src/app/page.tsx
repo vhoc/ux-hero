@@ -82,7 +82,6 @@ export default async function HomePage() {
         initialCurrentPeriod={currentPeriod}
         currentMonthPeriod={currentMonthPeriod}
         initialCriticalErrors={criticalErrors}
-        initialPeriods={allPeriods}
         userData={userData.user}
         initialIncidents={incidents}
       />

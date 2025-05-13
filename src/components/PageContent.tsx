@@ -6,10 +6,8 @@ import MainCounter from "./MainCounter";
 import AchievementsDisplay from "./AchievementsDisplay";
 import { type IPeriod, type IAward, type ICriticalError, type IIncident, type ISingleMonthPeriod, type TAwardId } from "types";
 import { supabase } from "@/utils/supabase/client";
-import { getDaysSinceLastCriticalError } from "@/utils/time-calculations";
 import { type User } from "@supabase/supabase-js";
 import { calculateMonthOfQuarter } from "@/utils/misc"
-import { setPeriodAward } from "@/app/actions/periods";
 import { getCurrentPeriod } from "@/app/actions/periods";
 import { calculateAwardPot } from "@/utils/misc";
 
@@ -19,25 +17,18 @@ interface PageContentProps {
   initialCurrentPeriod: IPeriod
   currentMonthPeriod: ISingleMonthPeriod
   initialCriticalErrors: ICriticalError[]
-  initialPeriods: IPeriod[]
   userData?: User | null
   initialIncidents?: IIncident[]
 }
 
 
 
-const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPeriod, initialCriticalErrors, initialPeriods, userData, initialIncidents }: PageContentProps) => {
+const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPeriod, initialCriticalErrors, userData, initialIncidents }: PageContentProps) => {
 
-  // Select the health value from the period that matches the month of today's date.
-  // const currentMonthPeriod = getCurrentMonthPeriod(today)
-  
   const monthOfQuarter = calculateMonthOfQuarter(today)
   const healthKey = `health_${monthOfQuarter}` as keyof IPeriod
 
-  // const [periods, setPeriods] = useState<IPeriod[]>(initialPeriods)
-  // const [currentPeriod, setCurrentPeriod] = useState<IPeriod | null>(initialCurrentPeriod)
   const [period, setPeriod] = useState<IPeriod | null>(null)
-  // const [currentHealth, setCurrentHealth] = useState<number>(Number(initialCurrentPeriod[healthKey]))
   const [criticalErrors, setCriticalErrors] = useState<ICriticalError[]>(initialCriticalErrors)
   const [incidents, setIncidents] = useState<IIncident[]>(initialIncidents ?? [])
   const [earnedAmount, setEarnedAmount] = useState<number>(0)
@@ -241,16 +232,17 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
               period.achieved_2 as TAwardId ?? null,
               period.achieved_3 as TAwardId ?? null,
             ]}
+            incidents_amount={incidents.length}
           />
 
-          <div className="flex flex-col gap-y-10 md:justify-center items-center w-full h-full xl:px-16 xl:flex-row xl:items-start">
+          <div className="flex flex-col gap-y-10 md:justify-center items-center w-full h-full xl:px-16 lg:flex-row">
 
             <MainCounter
               days={period.days_without_criticals}
               userData={userData}
               today={today}
               periodId={period.id}
-              incidents_amount={incidents.length}
+              
             />
 
             <AchievementsDisplay
@@ -270,7 +262,7 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
     )
   }
 
-  return <div>No data</div>
+  return <div>Loading...</div>
 
 
 
