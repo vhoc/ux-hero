@@ -15,7 +15,10 @@ const NavLink = ({ href, children }: NavLinkProps) => {
   const pathname = usePathname()
 
   return (
-    <Link href={href} className={`${pixelifySans.className} text-sm md:text-base ${ href === pathname ? 'text-yellow-400' : '' }`}>
+    <Link
+      href={href}
+      className={`${pixelifySans.className} hover:bg-white hover:text-black text-lg lg:text-small cursor-pointer ${ href === pathname ? 'text-yellow-400' : '' }`}
+    >
       {children}
     </Link>
   )

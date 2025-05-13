@@ -67,7 +67,7 @@ const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, mino
 
   if (awardsList) {
     return (
-      <div className="flex flex-col gap-y-10 px-6">
+      <div className="flex flex-col gap-y-10 px-16">
 
         {/* NOW PLAYING */}
         <div

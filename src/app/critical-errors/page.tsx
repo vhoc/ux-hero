@@ -29,18 +29,18 @@ export default async function CriticalErrorsPage() {
             <Table className="max-w-[1440px] mx-auto">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[100px] text-yellow-400">ID</TableHead>
-                  <TableHead className="text-yellow-400 w-[200px]">Date recorded</TableHead>
-                  <TableHead className="text-yellow-400 ">Description</TableHead>
+                  <TableHead className="w-[100px] text-yellow-400 text-xs md:text-base">ID</TableHead>
+                  <TableHead className="text-yellow-400 w-[200px] text-xs md:text-base">Date recorded</TableHead>
+                  <TableHead className="text-yellow-400 text-xs md:text-base">Description</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
               {
                 criticalErrors.map(( error, index ) => (
                   <TableRow key={`critical-error-${index}-${error.id}`}>
-                    <TableCell className="font-medium">{error.id}</TableCell>
-                    <TableCell>{error.date}</TableCell>
-                    <TableCell>{error.description}</TableCell>
+                    <TableCell className="font-medium text-xs md:text-base">{error.id}</TableCell>
+                    <TableCell className="text-xs md:text-base">{error.date}</TableCell>
+                    <TableCell className="text-xs md:text-base">{error.description}</TableCell>
                   </TableRow>
                 ))
               }
