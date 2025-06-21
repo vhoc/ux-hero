@@ -5,7 +5,6 @@ import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import PageContent from "@/components/PageContent";
 import { getAwards } from "@/app/actions/awards";
 import { getIncidents } from "@/app/actions/incidents";
-// import { checkIfHearsWereRestored } from "@/app/actions/health";
 import { getCurrentPeriod, getCurrentMonthPeriod, getAllPeriods,  } from "@/app/actions/periods";
 import { getCriticalErrors } from "@/app/actions/critical_errors";
 import { createClient } from "@/utils/supabase/server";
@@ -22,7 +21,7 @@ export default async function HomePage() {
   // Get today's date
   const today = new Date();
   // const today = new Date('2025-01-29T18:51:14.775Z');
-  const currentYear = Number(process.env.CURRENT_YEAR)
+  // const currentYear = Number(process.env.CURRENT_YEAR)
 
   const todayISO: string = today.toISOString().split('T')[0]!;
 
@@ -33,7 +32,7 @@ export default async function HomePage() {
   const currentPeriod  = await getCurrentPeriod(todayISO)
 
   // Get all periods
-  const allPeriods = await getAllPeriods(currentYear) ?? []
+  // const allPeriods = await getAllPeriods(currentYear) ?? []
 
   // Current month period
   const currentMonthPeriod = await getCurrentMonthPeriod(today)

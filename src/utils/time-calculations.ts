@@ -1,5 +1,12 @@
 import { type ICriticalError } from "types";
 
+// Create a function called literalDaysDiff that takes a start Date, and an end Date, and returns the number of days between them.
+export const literalDaysDiff = (start_date: Date, end_date: Date) => {
+  const timeDifference = end_date.getTime() - start_date.getTime()
+  const daysDifference = timeDifference / (1000 * 3600 * 24)
+  return daysDifference
+}
+
 export const daysDiff = (start_date_string: string, end_date_string: string) => {
 
   const startDateParts = start_date_string.split('-')

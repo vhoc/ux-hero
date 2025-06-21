@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-
 import { type Metadata } from "next";
 import { pressStart2P } from "@/fonts";
 import Nav from "@/components/Nav";
@@ -7,11 +6,11 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "UX Hero",
-  description: "UX Neighbor error mitigation app",
+  description: "UX Neighbor error control app",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (

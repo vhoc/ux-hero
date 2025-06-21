@@ -171,17 +171,6 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
 
   }, [supabase])
 
-  // Calculate the days since the last critical error in the current period
-  // useEffect(() => {
-  //   if (initialCurrentPeriod) {
-  //     const result = getDaysSinceLastCriticalError(criticalErrors, initialCurrentPeriod.start_date, today)
-
-  //     // console.log('result ',result)
-  //     setDaysSinceLastCriticalError(result ?? 0)
-  //   }
-
-  // }, [criticalErrors,initialCurrentPeriod, today])
-
   // Live update / Real time updates for the current period
   useEffect(() => {
     const channel = supabase.channel('current_period').on('postgres_changes', {
@@ -192,7 +181,6 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
 
       if (updateType === 'UPDATE') {
         setPeriod(updatedPeriod)
-        // setCurrentHealth(Number(updatedPeriod[healthKey]))
       }
 
     }).subscribe()
@@ -245,14 +233,21 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
               
             />
 
-            <AchievementsDisplay
-              awards={awards}
-              daysSinceLastCriticalError={period.days_without_criticals}
-              minorIssues={incidents}
-              currentHealth={period[healthKey] as number}
-              today={today}
-              period_end_date={period.end_date}
-            />
+            {
+              period.achieved_3 < 1 ?
+              <AchievementsDisplay
+                awards={awards}
+                daysSinceLastCriticalError={period.days_without_criticals}
+                minorIssues={incidents}
+                currentHealth={period[healthKey] as number}
+                today={today}
+                current_period={period}
+                period_end_date={period.end_date}
+              />
+              :
+              null
+            }
+            
 
           </div>
         </div>

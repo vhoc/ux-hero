@@ -186,3 +186,34 @@ export const updateMonthAchievedAward = async (period_id: number, month_of_quart
     console.error('An unexpected error occurred:', error);
   }
 }
+
+export const addOneDayToDaysSinceLastCriticalError = async (): Promise<void> => {
+
+  try {
+    const today = new Date();
+    const todayISO = today.toISOString().split('T')[0]!;
+
+    const currentPeriod = await getCurrentPeriod(todayISO)
+
+    if (currentPeriod?.days_without_criticals) {
+      const supabase = await createClient();
+      const { data, error }: { data: IPeriod[] | null, error: PostgrestError | null } = await supabase
+        .from('periods')
+        .update({ days_without_criticals: currentPeriod.days_without_criticals + 1 })
+        .eq('id', currentPeriod.id)
+        .select()
+        .single();
+  
+      if (error) {
+        console.error('Error updating period\'s days since last critical error: ', error)
+      }
+  
+      if (data) {
+        console.log('Added 1 day to the period\'s days since last critical error updated')
+      }
+    }
+    
+  } catch (error) {
+    console.error('An unexpected error occurred:', error);
+  }
+}

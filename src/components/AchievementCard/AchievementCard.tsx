@@ -1,5 +1,5 @@
 "use client"
-import { type IAward } from "types";
+import { type IPeriod, type IAward } from "types";
 import Image from "next/image"
 import clsx from "clsx";
 import { calculateBonusStatus } from "@/utils/misc";
@@ -13,10 +13,15 @@ interface AchievementCardProps {
   currentHealth: number
   isNowPlaying?: boolean
   daysSinceLastCriticalError: number
+  award_days_required: number
+  start_period_date: Date
   // lost?: boolean
 }
 
-const AchievementCard = ({ award, name, state = "unlocked", currentHealth, isNowPlaying = false, daysSinceLastCriticalError }: AchievementCardProps) => {
+const AchievementCard = ({ award, name, state = "unlocked", currentHealth, isNowPlaying = false, daysSinceLastCriticalError, award_days_required, start_period_date }: AchievementCardProps) => {
+
+  // Console log all the prop values
+  // console.log("AchievementCard props: ", { award, name, state, currentHealth, isNowPlaying, daysSinceLastCriticalError })
 
   const MAX_INCIDENTS = Number(process.env.MAX_INCIDENTS)
   const bonus_status = calculateBonusStatus(currentHealth)
@@ -111,7 +116,8 @@ const AchievementCard = ({ award, name, state = "unlocked", currentHealth, isNow
               // `${award.days_required - daysSinceLastCriticalError} days to achieve ${award.description}!`
                 isNowPlaying && noBonusWarning ? `You have half a heart left to keep the $${award.value / 2 } reward!` :
                   isNowPlaying && halfBonusWarning ? `Reward currently valued in $${award.value} until next incident!` :
-                `${!isNowPlaying ? `${award.days_required - daysSinceLastCriticalError} days to go.` : ''} Reward currently valued in $${bonusStatus === "half" ? award.value / 2 : award.value}!`
+                // `${!isNowPlaying ? `${award_days_required - daysSinceLastCriticalError} days to go.` : ''} Reward currently valued in $${bonusStatus === "half" ? award.value / 2 : award.value}!`
+                `Reward currently valued in $${bonusStatus === "half" ? award.value / 2 : award.value}!`
             }
           </p>
         </div>
