@@ -5,7 +5,7 @@ import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import PageContent from "@/components/PageContent";
 import { getAwards } from "@/app/actions/awards";
 import { getIncidents } from "@/app/actions/incidents";
-import { getCurrentPeriod, getCurrentMonthPeriod, getAllPeriods,  } from "@/app/actions/periods";
+import { getCurrentPeriod, getCurrentMonthPeriod  } from "@/app/actions/periods";
 import { getCriticalErrors } from "@/app/actions/critical_errors";
 import { createClient } from "@/utils/supabase/server";
 import { Toaster } from "@/components/ui/sonner";

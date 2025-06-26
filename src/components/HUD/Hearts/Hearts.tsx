@@ -42,7 +42,7 @@ const Hearts = ({ health = 0, today, userData, currentMonthPeriod }: HeartsProps
   // const hasHalfHeart = remainingHearts % 1 !== 0;
   const hasHalfHeart = health % 2 !== 0; // Check for a remainder (1 for odd numbers)
   // const emptyHearts = numberOfHearts - fullHearts - (hasHalfHeart ? 1 : 0);
-  const emptyHearts = NUMBER_OF_HEARTS - fullHearts - (hasHalfHeart ? 1 : 0);
+  const emptyHearts = Math.max( 0, NUMBER_OF_HEARTS - fullHearts - (hasHalfHeart ? 1 : 0) );
 
   // const lastFullHeartBeats = fullHearts > 0 && !hasHalfHeart;
   const lastFullHeartBeats = fullHearts > 0 && !hasHalfHeart;
