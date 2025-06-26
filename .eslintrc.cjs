@@ -38,20 +38,6 @@ const config = {
       }
     ]
   },
-  "overrides": [
-    {
-      "files": [
-        "src/utils/cron/*.js",
-        "src/env.js",
-        "src/utils/cron/cron-lib.js",
-        "src/utils/cron/cron-server.js",
-        "src/utils/cron/test-getMonthTotalDays.js"
-      ],
-      "excludedFiles": "*",
-      "rules": {
-        "all": "off"
-      }
-    }
-  ]
+  
 }
 module.exports = config;
