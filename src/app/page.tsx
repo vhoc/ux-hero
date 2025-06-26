@@ -16,7 +16,9 @@ export const dynamic = 'force-dynamic';
 export default async function HomePage() {
 
   const supabase = await createClient()
-  const { data: userData, error: userError } = await supabase.auth.getUser()
+  
+  // TODO: Handle error
+  const { data: userData } = await supabase.auth.getUser()
 
   // Get today's date
   const today = new Date();

@@ -11,7 +11,8 @@ import NavSheet from "./ui/NavSheet";
 const Nav = async () => {
 
   const supabase = await createClient()
-  const { data: userData, error: userError } = await supabase.auth.getUser()
+  // TODO: Handle error
+  const { data: userData } = await supabase.auth.getUser()
 
   return (
     <div

@@ -1,5 +1,5 @@
 "use client"
-import { type IPeriod, type IAward } from "types";
+import { type IAward } from "types";
 import Image from "next/image"
 import clsx from "clsx";
 import { calculateBonusStatus } from "@/utils/misc";
@@ -18,7 +18,7 @@ interface AchievementCardProps {
   // lost?: boolean
 }
 
-const AchievementCard = ({ award, name, state = "unlocked", currentHealth, isNowPlaying = false, daysSinceLastCriticalError, award_days_required, start_period_date }: AchievementCardProps) => {
+const AchievementCard = ({ award, name, state = "unlocked", currentHealth, isNowPlaying = false }: AchievementCardProps) => {
 
   // Console log all the prop values
   // console.log("AchievementCard props: ", { award, name, state, currentHealth, isNowPlaying, daysSinceLastCriticalError })

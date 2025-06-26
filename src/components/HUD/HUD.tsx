@@ -1,7 +1,7 @@
 "use client"
 import PlayerStatus from "./PlayerStatus"
 import clsx from "clsx"
-import { type IPeriod, type IAward, type IIncident, type ISingleMonthPeriod, type TAwardId } from "types"
+import { type IAward, type IIncident, type ISingleMonthPeriod, type TAwardId } from "types"
 import Period from "./Period"
 import styles from "./HUD.module.css"
 import AwardStars from "../AwardStars/AwardStars"

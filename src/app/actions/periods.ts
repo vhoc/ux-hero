@@ -40,7 +40,7 @@ export const getCurrentPeriod = async (todayISO: string): Promise<IPeriod | null
 
 }
 
-export const getAllPeriods = async (year: number): Promise<IPeriod[] | null> => {
+export const getAllPeriods = async (): Promise<IPeriod[] | null> => {
   try {
     const supabase = await createClient();
     const { data, error }: { data: IPeriod[] | null, error: PostgrestError | null } = await supabase

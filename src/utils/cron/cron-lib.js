@@ -73,7 +73,6 @@ export const current_and_next_month = (current_date, trigger_months) => {
 export const getCurrentPeriod = async (date) => {
 
   const today = date ? date : new Date();
-  const todayPreviousMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
   const todayISO = today.toISOString();
   console.log('today', today)
 

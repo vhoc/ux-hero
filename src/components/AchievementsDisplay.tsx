@@ -1,6 +1,6 @@
 import AchievementCard from "./AchievementCard/AchievementCard"
 import { type IAwardsCheckList, type IAward, type IIncident, type IPeriod } from "types"
-import { daysDiff, literalDaysDiff } from "@/utils/time-calculations"
+import { daysDiff } from "@/utils/time-calculations"
 import { arraysEqual } from "@/lib/utils"
 
 interface AchievementsDisplayProps {
@@ -68,7 +68,7 @@ const getAwardsCheckList = (daysWithoutCriticalError: number, awards: IAward[], 
 }
 
 
-const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, minorIssues = [], currentHealth, today, period_end_date, current_period }: AchievementsDisplayProps) => {
+const AchievementsDisplay = ({ awards = [], daysSinceLastCriticalError = 0, currentHealth, today, period_end_date, current_period }: AchievementsDisplayProps) => {
 
 
   // Select the award that is currently playing:
