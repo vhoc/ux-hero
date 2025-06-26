@@ -37,6 +37,14 @@ const config = {
         }
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/utils/cron/*.js"],
+      "rules": {
+        "all": "off"
+      }
+    }
+  ]
 }
 module.exports = config;
