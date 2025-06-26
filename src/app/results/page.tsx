@@ -13,8 +13,8 @@ import {
 
 export default async function ResultsPage() {
 
-  const currentYear = Number(process.env.CURRENT_YEAR)
-  const periods = await getAllPeriods(currentYear) ?? []
+  // const periods = await getAllPeriods(currentYear) ?? []
+  const periods = await getAllPeriods() ?? []
   const awards = await getAwards()
 
   const awardPots = periods.map(period => ({ period_id: period.id, award_amount: calculateAwardPot(awards!, period) }))
