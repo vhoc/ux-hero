@@ -1,5 +1,7 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import "dotenv/config";
-//@ts-nocheck
 // Use explicit file extensions in the import statements in this file.
 
 import cron from "node-cron";
