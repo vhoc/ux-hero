@@ -47,11 +47,11 @@ export const addIncident = async (date: Date, description: string) => {
       if (currentHealth === 1) {
         await addCriticalError("Accumulation of incidents. No hearts left.", date) // Losing all health due to accumulation of incidents equals one critical error.
         void resetDaysWithoutCriticals(currentPeriod.id) // Reset days without criticals because we're losing all health here.
-              .then((error) => {
-                if (error) {
-                  console.error(error)
-                }
-              }) 
+          .then((error) => {
+            if (error) {
+              console.error(error)
+            }
+          })
         await setPeriodHealth(MAX_INCIDENTS, health_column_name, currentPeriod.id) // Restore health.
       }
 
@@ -65,7 +65,11 @@ export const addIncident = async (date: Date, description: string) => {
     const { data, error }: { data: IIncident[] | null, error: PostgrestError | null } = await supabase
       .from('incidents')
       .insert([
-        { description: description, date: todayISO }
+        {
+          description: description,
+          date: todayISO,
+          accountable_id: 1,//TODO: Implement accountable selctor on New Incident form.
+        }
       ])
       .select();
 

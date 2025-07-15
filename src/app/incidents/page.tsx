@@ -35,16 +35,16 @@ export default async function IncidentsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-              {
-                incidents.map(( incident, index ) => (
-                  <TableRow key={`incident-${index}-${incident.id}`}>
-                    <TableCell className="font-medium text-xs md:text-base">{incident.id}</TableCell>
-                    <TableCell className="text-xs md:text-base">{incident.date}</TableCell>
-                    <TableCell className="text-xs md:text-base">{incident.description}</TableCell>
-                  </TableRow>
-                ))
-              }
-                
+                {
+                  incidents.map((incident, index) => (
+                    <TableRow key={`incident-${index}-${incident.id}`}>
+                      <TableCell className="font-medium text-xs md:text-base">{incident.id}</TableCell>
+                      <TableCell className="text-xs md:text-base">{new Date(incident.date).toLocaleDateString('es-MX')}</TableCell>
+                      <TableCell className="text-xs md:text-base">{incident.description}</TableCell>
+                    </TableRow>
+                  ))
+                }
+
               </TableBody>
             </Table>
           </div>
