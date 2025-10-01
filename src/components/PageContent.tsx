@@ -35,10 +35,11 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
 
   // Set initial current period
   useEffect(() => {
-    const todayISO: string = today.toISOString().split('T')[0]!;
+    const todayISO: string = today.toISOString();
     getCurrentPeriod(todayISO)
       .then((period) => {
         if (period) {
+          // console.log('period: ', period)
           setPeriod(period)
         }
       })
@@ -230,24 +231,24 @@ const PageContent = ({ today, awards = [], initialCurrentPeriod, currentMonthPer
               userData={userData}
               today={today}
               periodId={period.id}
-              
+
             />
 
             {
               period.achieved_3 < 1 ?
-              <AchievementsDisplay
-                awards={awards}
-                daysSinceLastCriticalError={period.days_without_criticals}
-                minorIssues={incidents}
-                currentHealth={period[healthKey] as number}
-                today={today}
-                current_period={period}
-                period_end_date={period.end_date}
-              />
-              :
-              null
+                <AchievementsDisplay
+                  awards={awards}
+                  daysSinceLastCriticalError={period.days_without_criticals}
+                  minorIssues={incidents}
+                  currentHealth={period[healthKey] as number}
+                  today={today}
+                  current_period={period}
+                  period_end_date={period.end_date}
+                />
+                :
+                null
             }
-            
+
 
           </div>
         </div>

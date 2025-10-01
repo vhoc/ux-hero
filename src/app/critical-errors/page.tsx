@@ -12,10 +12,10 @@ import {
 export default async function CriticalErrorsPage() {
 
   const today = new Date();
-  const todayISO = today.toISOString().split('T')[0];
+  const todayISO = today.toISOString();
 
   // Current period & criticalErrors
-  const currentPeriod = await getCurrentPeriod(todayISO!)
+  const currentPeriod = await getCurrentPeriod(todayISO)
   const criticalErrors = await getCriticalErrors(currentPeriod!)
 
   return (
@@ -35,16 +35,16 @@ export default async function CriticalErrorsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-              {
-                criticalErrors.map(( error, index ) => (
-                  <TableRow key={`critical-error-${index}-${error.id}`}>
-                    <TableCell className="font-medium text-xs md:text-base">{error.id}</TableCell>
-                    <TableCell className="text-xs md:text-base">{error.date}</TableCell>
-                    <TableCell className="text-xs md:text-base">{error.description}</TableCell>
-                  </TableRow>
-                ))
-              }
-                
+                {
+                  criticalErrors.map((error, index) => (
+                    <TableRow key={`critical-error-${index}-${error.id}`}>
+                      <TableCell className="font-medium text-xs md:text-base">{error.id}</TableCell>
+                      <TableCell className="text-xs md:text-base">{error.date}</TableCell>
+                      <TableCell className="text-xs md:text-base">{error.description}</TableCell>
+                    </TableRow>
+                  ))
+                }
+
               </TableBody>
             </Table>
           </div>
