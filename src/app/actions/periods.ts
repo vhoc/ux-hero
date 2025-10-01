@@ -47,8 +47,8 @@ export const getAllPeriods = async (): Promise<IPeriod[] | null> => {
       .from('periods')
       .select('*')
       .order('id')
-      // .gte('start_date', `${year}-01-01`)
-      // .lte('end_date', `${year}-12-31`);
+    // .gte('start_date', `${year}-01-01`)
+    // .lte('end_date', `${year}-12-31`);
 
     if (error) {
       console.error('Error fetching periods: ', error)
@@ -108,7 +108,7 @@ export const setPeriodAward = async (date: Date, period_id: number, monthOfQuart
   // console.log('setPeriodAward props')
   // console.log(JSON.stringify({ date, period_id, monthOfQuarter }, null, 2))
 
-  const todayISO: string = date.toISOString().split('T')[0]!;
+  const todayISO: string = date.toISOString();
   const currentPeriod = await getCurrentPeriod(todayISO)
   const criticalErrors = await getCriticalErrors(currentPeriod!)
   const daysSinceLastCriticalError = getDaysSinceLastCriticalError(criticalErrors!, currentPeriod!.start_date, date)
@@ -120,11 +120,11 @@ export const setPeriodAward = async (date: Date, period_id: number, monthOfQuart
     // 1. Check if the current month is the first, second or third month of the quarter
     const pastMonthOfQuarter = monthOfQuarter - 1
     const columnToUpdate = `achieved_${monthOfQuarter}` as keyof IPeriod
-    
+
     const awardId = daysSinceLastCriticalError >= 30 && daysSinceLastCriticalError < 60 ? 1 :
       daysSinceLastCriticalError >= 60 && daysSinceLastCriticalError < 90 ? 2 :
         daysSinceLastCriticalError >= 90 ? 3 : null
-    
+
     console.log('setPeriodAward/awardId: ', awardId)
 
     // console.log('setPeriodAward values')
@@ -191,7 +191,7 @@ export const addOneDayToDaysSinceLastCriticalError = async (): Promise<void> => 
 
   try {
     const today = new Date();
-    const todayISO = today.toISOString().split('T')[0]!;
+    const todayISO = today.toISOString();
 
     const currentPeriod = await getCurrentPeriod(todayISO)
 
@@ -203,16 +203,16 @@ export const addOneDayToDaysSinceLastCriticalError = async (): Promise<void> => 
         .eq('id', currentPeriod.id)
         .select()
         .single();
-  
+
       if (error) {
         console.error('Error updating period\'s days since last critical error: ', error)
       }
-  
+
       if (data) {
         console.log('Added 1 day to the period\'s days since last critical error updated')
       }
     }
-    
+
   } catch (error) {
     console.error('An unexpected error occurred:', error);
   }

@@ -12,10 +12,10 @@ import {
 export default async function IncidentsPage() {
 
   const today = new Date();
-  const todayISO = today.toISOString().split('T')[0];
+  const todayISO = today.toISOString();
 
   // Current period & criticalErrors
-  const currentPeriod = await getCurrentPeriod(todayISO!)
+  const currentPeriod = await getCurrentPeriod(todayISO)
   const incidents = await getIncidents(currentPeriod!)
 
   return (
