@@ -74,7 +74,7 @@ export const getCurrentPeriod = async (date) => {
 
   const today = date ? date : new Date();
   const todayISO = today.toISOString();
-  console.log('today', today)
+  // console.log('today', today)
 
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -114,12 +114,12 @@ export const getCurrentPeriod = async (date) => {
 
 
 export const addOneDayToDaysSinceLastCriticalError = async () => {
-
+  console.log('addOneDayToDaysSinceLastCriticalError...')
   try {
 
     const currentPeriod = await getCurrentPeriod()
 
-    if (currentPeriod?.days_without_criticals) {
+    if (currentPeriod) {// Remove days_without_criticals check because 0 is falsy.
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 

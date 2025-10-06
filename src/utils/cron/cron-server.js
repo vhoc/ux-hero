@@ -12,6 +12,13 @@ import {
   evaluateAndGrantThirdAward
 } from "./cron-lib.js";
 
+// Test function to manually trigger the daily task
+export async function testDailyTask() {
+  console.log(`[${new Date().toISOString()}] :: TESTING - Manually triggering daily task...`);
+  await addOneDayToDaysSinceLastCriticalError();
+  console.log(`[${new Date().toISOString()}] :: TESTING - Daily task completed.`);
+}
+
 
 let isScheduled_daily_counter_cron = false;
 let isScheduled_every_month_start = false;
